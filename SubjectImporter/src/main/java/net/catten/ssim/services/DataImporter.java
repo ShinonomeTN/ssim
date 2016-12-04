@@ -59,9 +59,11 @@ public class DataImporter implements TickEventProvider {
 
     public DataImporter(Connection connection, Map<Integer,String> bufferedData, String charset, String tablePrefix){
         this.bufferMap = bufferedData;
-        initialize(connection,charset);
-        logger.info("DataImporter initialized for import from buffer.");
         this.tablePrefix = tablePrefix;
+
+        initialize(connection,charset);
+
+        logger.info("DataImporter initialized for import from buffer.");
     }
 
     private void initialize(Connection connection, String charset) {

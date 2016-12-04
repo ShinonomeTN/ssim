@@ -45,26 +45,28 @@ public class Main {
 
         DataImporter dataImporter;
 
-        String tablePrefix = args[0] + "_";
-
-        if(args.length == 1) {
-            Map<Integer, String> resultMap = caterpillar.getTermSubjectToMemory(Integer.parseInt(args[0]));
-            dataImporter = new DataImporter(connection,resultMap,loginProperties.getProperty("UTF-8"),tablePrefix);
-        }else{
-            File targetDir = new File(args[1]);
-
-            if (args.length <= 2 || !args[2].equals("--continue")) {
-                caterpillar.getTermSubjectToFiles(Integer.parseInt(args[0]),targetDir);
-            }
-            dataImporter = new DataImporter(connection,targetDir,loginProperties.getProperty("charset"),".html",tablePrefix);
-        }
+        String schoolTerm = args[0];
+        String tablePrefix = schoolTerm + "_";
 
         //Check tables and create not existed table
-        TableMaker tableMaker = new TableMaker(connection, tableProperty,tablePrefix);
-        TableChecker tableChecker = new TableChecker(connection, new ArrayList<>(tableProperty.stringPropertyNames()),tablePrefix);
+        TableMaker tableMaker = new TableMaker(connection, tableProperty, tablePrefix);
+        TableChecker tableChecker = new TableChecker(connection, new ArrayList<>(tableProperty.stringPropertyNames()), tablePrefix);
         List<String> notExistTables = tableChecker.checkNotExist();
         logger.info("Check tables successful");
         tableMaker.make(notExistTables);
+
+        if (args.length == 1) {
+            Map<Integer, String> resultMap = caterpillar.getTermSubjectToMemory(Integer.parseInt(schoolTerm));
+
+            dataImporter = new DataImporter(connection, resultMap, loginProperties.getProperty("UTF-8"), tablePrefix);
+        } else {
+            File targetDir = new File(args[1]);
+
+            if (args.length <= 2 || !args[2].equals("--continue"))
+                caterpillar.getTermSubjectToFiles(Integer.parseInt(schoolTerm), targetDir);
+
+            dataImporter = new DataImporter(connection, targetDir, loginProperties.getProperty("charset"), ".html", tablePrefix);
+        }
 
         //Import to database
         dataImporter.setTickReceiver(progressPrinter);

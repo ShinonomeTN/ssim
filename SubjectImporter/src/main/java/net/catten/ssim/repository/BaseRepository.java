@@ -10,7 +10,7 @@ public abstract class BaseRepository<T> {
     protected Connection connection;
     protected String table;
 
-    public BaseRepository(Connection connection, String table){
+    public BaseRepository(Connection connection, String table) {
         this.connection = connection;
         this.table = table;
     }
