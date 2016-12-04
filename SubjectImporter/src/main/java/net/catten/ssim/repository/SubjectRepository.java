@@ -18,7 +18,7 @@ public class SubjectRepository extends BaseRepository<Subject>{
     @Override
     public void save(Subject entity) throws SQLException {
         PreparedStatement preparedStatement = connection
-                .prepareStatement("INSERT INTO " + table +" (id,term,name,code,unit,timeSpend,point) VALUES (?,?,?,?,?,?,?)");
+                .prepareStatement("INSERT INTO " + table +"subjects (id,term,name,code,unit,timeSpend,point) VALUES (?,?,?,?,?,?,?)");
         preparedStatement.setInt(1,entity.getId());
         preparedStatement.setString(2,entity.getTerm());
         preparedStatement.setString(3,entity.getName());

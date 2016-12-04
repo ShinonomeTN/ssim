@@ -18,7 +18,7 @@ public class LessonRepository extends BaseRepository<LessonDTO> {
     @Override
     public void save(LessonDTO entity) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO " + table +" (subject,teacher,classNumber,attendAmount,classAttend,classType,assessmentType,week,timePoint,address) VALUE (?,?,?,?,?,?,?,?,?,?)");
+                "INSERT INTO " + table +"lessons (subject,teacher,classNumber,attendAmount,classAttend,classType,assessmentType,week,timePoint,address) VALUE (?,?,?,?,?,?,?,?,?,?)");
         preparedStatement.setInt(1,entity.getSubject());
         preparedStatement.setString(2,entity.getTeacher());
         preparedStatement.setString(3,entity.getClassNumber());

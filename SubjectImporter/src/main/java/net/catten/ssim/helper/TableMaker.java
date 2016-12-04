@@ -20,14 +20,15 @@ public class TableMaker {
     public TableMaker(Connection connection, Properties tableProperty, String prefix) {
         this.connection = connection;
         this.tableProperty = tableProperty;
+        this.prefix = prefix;
         logger = Logger.getLogger(this.getClass().toString());
     }
 
     public void make(List<String> makeList) throws SQLException {
         Statement statement = connection.createStatement();
         for (String s : makeList) {
-            int result = statement.executeUpdate(String.format("CREATE TABLE %s (%s)", s, prefix + tableProperty.get(s)));
-            logger.info(String.format("Created table %s, result = %d", s, result));
+            int result = statement.executeUpdate(String.format("CREATE TABLE %s (%s)", prefix + s,tableProperty.get(s)));
+            logger.info(String.format("Created table %s, result = %d", prefix + s, result));
         }
     }
 
