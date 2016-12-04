@@ -2,13 +2,21 @@
 
 此工具专门用于批量抓取青果网的“课程课表”页面数据，并整理成原始课程数据导入到数据库
 
+##构建
+
+需要先安装 maven 然后再构建此工程
+
+	mvn clean package
+
+构建完之后文件在 SubjectImporter 的 target 里，ssim-main-2.0.jar 为可执行 jar 包，lib 文件夹为所依赖的组件。
+
 ##执行命令
 
 总共有三种启动方式
 
-	java -jar SimpleSubjectImporter.jar 学期代号
-	java -jar SimpleSubjectImporter.jar 学期代号 缓存文件夹
-	java -jar SimpleSubjectImporter.jar 学期代号 缓存文件夹 --continue
+	java -jar ssim-main-2.0.jar 学期代号
+	java -jar ssim-main-2.0.jar 学期代号 缓存文件夹
+	java -jar ssim-main-2.0.jar 学期代号 缓存文件夹 --continue
 
 其中学期代号格式是年份+学期，例如20140，2014是年份，0为第一学期（1就是第二学期）。缓存文件夹是制定爬虫把网页缓存在哪里。
 --continue 选项是直接跳过抓取，仅丛缓存文件夹导入。
@@ -20,7 +28,7 @@
 
 配置文件有两个： login.properties 和 connection.properties
 
-###login.properties 说明
+### login.properties 说明
 
 此配置文件是关于爬虫的配置文件。
 
@@ -36,7 +44,7 @@
 
 username 填登录帐号。 password 填登录密码。 role 指登录的类型，学生的类型是 STU ，其他类型请自行查看青果网教务登录框的其他值。charset 是页面编码，默认 GB2312  不要改，除非青果网更改页面编码。 tableFormat 是爬取的课表格式，不用改。 delay 是抓取下一个页面前的等待时间，单位毫秒，建议不要低于400，容易卡住。 userAgent 是要伪装成什么浏览器，如果你有特殊偏好的话可以改成其他浏览器，这里默认是 Linux 下的 Chrome。
 
-###connection.properties 说明
+### connection.properties 说明
 
 此配置文件是关于数据库的配置文件。
 
@@ -64,7 +72,7 @@ unit : 所属学院
 timeSpend : 学时
 point : 学分
 
-####lessons表
+#### lessons 表
 
 id	: 自增 id
 subject : 对应 subjects 表内的课程 id
