@@ -1,5 +1,6 @@
 package net.catten.ssim.schedule.kingo;
 
+import net.catten.ssim.schedule.factory.ClassScheduleReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Created by CattenLinger on 2017/2/23.
  */
-public class KingoCourseTableReader {
+public class KingoCourseTableReader implements ClassScheduleReader<KingoCourseRawTable> {
 
     private String charset = "UTF-8";
 

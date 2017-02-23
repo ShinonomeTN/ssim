@@ -26,7 +26,6 @@ import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -50,6 +49,8 @@ public class KingoJWCaterpillar implements TickEventProvider {
 
     private HttpClient httpClient;
 
+    private HttpSessionHolder httpSessionHolder = new HttpSessionHolderImpl();
+
     private TickEventReceiver tickEventReceiver = message -> {
         //do nothing...
     };
@@ -58,7 +59,7 @@ public class KingoJWCaterpillar implements TickEventProvider {
         this.loginProperties = new Properties();
         this.stringProperties = new Properties();
         this.loginProperties = loginProperties;
-        stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/strings.properties"));
+        stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/net/catten/lnc/kingo/jw/strings.properties"));
         logger.info("Properties Loaded.");
 
         cookieStore = new BasicCookieStore();
@@ -110,21 +111,16 @@ public class KingoJWCaterpillar implements TickEventProvider {
         CloseableHttpResponse response;
 
         //Try to get indexPage
-        logger.info("Requesting address : " + loginPageAddress);
-        response = getResponse(loginPageAddress, loginPageAddress);
-        resultPage = Jsoup.parse(response.getEntity().getContent(), charset, "");
-        response.close();
+        resultPage = httpSessionHolder.get(loginPageAddress,loginPageAddress);
 
         FormElement theForm = (FormElement) resultPage.getElementsByTag("form").first();
-        if (theForm.elements().size() < 1) {
+        if (!Validate.isForm(theForm) && theForm.elements().size() <= 0) {
             logger.warning("Login form not found, maybe the website was close or under construction.");
             return false;
         }
 
         //Try to login
-        response = postResponse(loginPageAddress, loginPageAddress, prepareLoginData(theForm));
-        resultPage = Jsoup.parse(response.getEntity().getContent(), charset, "");
-        response.close();
+        resultPage = httpSessionHolder.post(loginPageAddress,loginPageAddress,prepareLoginData(theForm));
 
         Element element = resultPage.getElementById("divLogNote").child(0);
         if (!element.text().equals(stringProperties.getProperty("loginSuccessTip"))) {
@@ -143,11 +139,9 @@ public class KingoJWCaterpillar implements TickEventProvider {
     public Map<String, String> getTerms() throws IOException {
 
         String queryPage = stringProperties.getProperty("classInfoQueryPage");
+
         //Get page
-        CloseableHttpResponse response = getResponse(queryPage, queryPage);
-        Document resultPage = Jsoup.parse(response.getEntity().getContent(), charset, "");
-        response.close();
-        logger.info("request finished.");
+        Document resultPage = httpSessionHolder.get(queryPage,queryPage);
 
         //Analyze page
         FormElement theForm = (FormElement) resultPage.getElementById("form1");
@@ -170,11 +164,9 @@ public class KingoJWCaterpillar implements TickEventProvider {
 
         String queryPage = stringProperties.getProperty("subjectListQueryPage") + String.valueOf(termCode);
         String referPage = stringProperties.getProperty("classInfoQueryPage");
+
         //Get page
-        CloseableHttpResponse response = getResponse(queryPage, referPage);
-        Document resultPage = Jsoup.parse(response.getEntity().getContent(), charset, "");
-        response.close();
-        logger.info("request finished.");
+        Document resultPage = httpSessionHolder.get(queryPage,referPage);
 
         //Analyze page
         Element scriptElement = resultPage.getElementsByTag("script").first();
@@ -226,7 +218,7 @@ public class KingoJWCaterpillar implements TickEventProvider {
             current++;
             nameValuePairs.removeLast();
             nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", key));
-            results.put(Integer.parseInt(key), getSingleSubjectPage(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)));
+            results.put(Integer.parseInt(key), httpSessionHolder.post(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)).data());
             tickEventReceiver.tick(total, current, key);
             Thread.sleep(delayMS);
         }
@@ -276,7 +268,7 @@ public class KingoJWCaterpillar implements TickEventProvider {
 
             File file = new File(outputFolder, key + ".html");
             FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(file, "UTF-8");
-            fileWriter.write(getSingleSubjectPage(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)));
+            fileWriter.write(httpSessionHolder.post(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)).data());
             fileWriter.flush();
             fileWriter.close();
 
@@ -286,13 +278,6 @@ public class KingoJWCaterpillar implements TickEventProvider {
         System.out.println();
         logger.info("Capture finished.");
         return current;
-    }
-
-    private String getSingleSubjectPage(String refer, String targetPage, UrlEncodedFormEntity formEntity) throws IOException {
-        CloseableHttpResponse response = postResponse(targetPage, refer, formEntity);
-        String result = IOUtils.toString(response.getEntity().getContent(), charset);
-        response.close();
-        return result;
     }
 
     /**
@@ -305,10 +290,7 @@ public class KingoJWCaterpillar implements TickEventProvider {
 
         String queryPage = stringProperties.getProperty("classInfoQueryPage");
 
-        CloseableHttpResponse response = getResponse(queryPage, queryPage);
-        Document resultPage = Jsoup.parse(response.getEntity().getContent(), charset, "");
-        response.close();
-        logger.info("request finished.");
+        Document resultPage = httpSessionHolder.get(queryPage,queryPage);
 
         Element element = resultPage.getElementById("txt_yzm");
         boolean result = !element.parent().attr("style").equals("display:none");
@@ -356,47 +338,6 @@ public class KingoJWCaterpillar implements TickEventProvider {
             }
         }
         return new UrlEncodedFormEntity(nameValuePairs, charset);
-    }
-
-    /**
-     * Set user-agent as Chrome(Linux) and set refer
-     *
-     * @param request
-     * @param refer
-     */
-    private void prepareBaseHeader(HttpRequestBase request, String refer) {
-        request.setHeader("Referer", refer);
-        request.setHeader("User-Agent", userAgent);
-    }
-
-    /**
-     * Factory method for GET request
-     *
-     * @param targetPage
-     * @param refer
-     * @return
-     * @throws IOException
-     */
-    private CloseableHttpResponse getResponse(String targetPage, String refer) throws IOException {
-        HttpGet httpGet = new HttpGet(targetPage);
-        prepareBaseHeader(httpGet, refer);
-        return (CloseableHttpResponse) httpClient.execute(httpGet, websiteContext);
-    }
-
-    /**
-     * Factory method for POST request
-     *
-     * @param targetPage
-     * @param refer
-     * @param formEntity
-     * @return
-     * @throws IOException
-     */
-    private CloseableHttpResponse postResponse(String targetPage, String refer, UrlEncodedFormEntity formEntity) throws IOException {
-        HttpPost httpPost = new HttpPost(targetPage);
-        prepareBaseHeader(httpPost, refer);
-        httpPost.setEntity(formEntity);
-        return (CloseableHttpResponse) httpClient.execute(httpPost, websiteContext);
     }
 
     public String getUserAgent() {
