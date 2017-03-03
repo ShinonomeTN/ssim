@@ -2,4 +2,6 @@
 *.iml
 target/
 out/
-/web/WEB-INF/captureBuffer/
+web/WEB-INF/captureBuffer/
+web/index.jsp
+/**/login.properties
