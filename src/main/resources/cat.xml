@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:bean="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean class="net.catten.ssim.services.util.TickModel" name="tickReceiver"/>
+
+    <bean class="net.catten.ssim.services.util.CaptureThread">
+        <property name="caterpillar">
+            <bean class="net.catten.ssim.schedule.kingo.jw.caterpillar.impl.KingoJWCaterpillar">
+                <property name="loginProperties">
+                    <bean:properties location="WEB-INF/login.properties"/>
+                </property>
+                <property name="tickReceiver" ref="tickReceiver"/>
+            </bean>
+        </property>
+
+        <property name="factory">
+            <bean class="net.catten.ssim.schedule.factory.CourseFactory"/>
+        </property>
+
+        <property name="expander">
+            <bean class="net.catten.ssim.helper.LessonExpander"/>
+        </property>
+
+        <property name="receiver" ref="tickReceiver"/>
+
+        <property name="bufferPath" value="WEB-INF/captureBuffer"/>
+    </bean>
+
+</beans>

@@ -13,6 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +24,6 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -33,12 +34,12 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     private Properties stringProperties;
     private int delayMS;
 
-    private Logger logger = Logger.getLogger(KingoJWCaterpillar.class.toString());
+    private Logger logger = LoggerFactory.getLogger(KingoJWCaterpillar.class);
 
     private HttpSessionHolder httpSessionHolder = new HttpSessionHolderImpl();
 
     private TickEventReceiver tickEventReceiver = message -> {
-        //do nothing...
+        logger.info("Working : " + message[0] + "/" + message[1] + " - " + message[2]);
     };
 
     public KingoJWCaterpillar(Properties loginProperties) throws IOException {
@@ -46,6 +47,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     }
 
     public KingoJWCaterpillar(){
+        logger.info("Using default tick receiver : logger ");
     }
 
     private void init(Properties loginProperties) throws IOException {
@@ -101,7 +103,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
 
         FormElement theForm = (FormElement) resultPage.getElementsByTag("form").first();
         if (!Validate.isForm(theForm) && theForm.elements().size() <= 0) {
-            logger.warning("Login form not found, maybe the website was close or under construction.");
+            logger.warn("Login form not found, maybe the website was close or under construction.");
             return false;
         }
 
@@ -110,7 +112,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
 
         Element element = resultPage.getElementById("divLogNote").child(0);
         if (!element.text().equals(stringProperties.getProperty("loginSuccessTip"))) {
-            logger.warning("Login result : " + element.text());
+            logger.warn("Login result : " + element.text());
             return false;
         }
         return true;
@@ -148,9 +150,9 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
      * @throws IOException
      */
     @Override
-    public Map<String, String> getCoursesFromRemote(Integer termCode) throws IOException {
+    public Map<String, String> getCoursesFromRemote(String termCode) throws IOException {
 
-        String queryPage = stringProperties.getProperty("subjectListQueryPage") + String.valueOf(termCode);
+        String queryPage = stringProperties.getProperty("subjectListQueryPage") + termCode;
         String referPage = stringProperties.getProperty("classInfoQueryPage");
 
         //Get page
@@ -181,7 +183,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
      * @throws InterruptedException
      */
     @Override
-    public Map<Integer, String> getTermSubjectToMemory(Integer termCode) throws IOException, InterruptedException {
+    public Map<String, String> getTermSubjectToMemory(String termCode) throws IOException, InterruptedException {
 
         if (isLoginExpire()) initializeSession();
         logger.info("checking login status finished");
@@ -191,12 +193,12 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
 
 
         LinkedList<NameValuePair> nameValuePairs = new LinkedList<>();
-        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", String.valueOf(termCode)));
+        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", termCode));
         nameValuePairs.add(new BasicNameValuePair("gs", loginProperties.getProperty("tableFormat")));
         nameValuePairs.add(new BasicNameValuePair("txt_yzm", ""));
         nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", ""));
 
-        Map<Integer, String> results = new HashMap<>();
+        Map<String, String> results = new HashMap<>();
 
         logger.info("Capturing subject data...");
         Map<String, String> lessonListOfTheTerm = getCoursesFromRemote(termCode);
@@ -207,7 +209,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
             current++;
             nameValuePairs.removeLast();
             nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", key));
-            results.put(Integer.parseInt(key), httpSessionHolder.post(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)).data());
+            results.put(key, httpSessionHolder.post(targetPage , referPage, new UrlEncodedFormEntity(nameValuePairs)).data());
             tickEventReceiver.tick(total, current, key);
             Thread.sleep(delayMS);
         }
@@ -226,10 +228,10 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
      * @throws InterruptedException
      */
     @Override
-    public int getTermSubjectToFiles(Integer termCode, File outputFolder) throws IOException, InterruptedException {
+    public int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException {
 
         if (!outputFolder.isDirectory()) {
-            logger.warning("specified path is not a directory : " + outputFolder.getAbsolutePath());
+            logger.warn("specified path is not a directory : " + outputFolder.getAbsolutePath());
             return -1;
         }
 
@@ -250,7 +252,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
 
 
         LinkedList<NameValuePair> nameValuePairs = new LinkedList<>();
-        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", String.valueOf(termCode)));
+        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", termCode));
         nameValuePairs.add(new BasicNameValuePair("gs", loginProperties.getProperty("tableFormat")));
         nameValuePairs.add(new BasicNameValuePair("txt_yzm", ""));
         nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", ""));
@@ -267,7 +269,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
 
             File file = new File(outputFolder, key + ".html");
             FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(file, "UTF-8");
-            fileWriter.write(httpSessionHolder.post(referPage, targetPage, new UrlEncodedFormEntity(nameValuePairs)).data());
+            fileWriter.write(httpSessionHolder.post(targetPage, referPage, new UrlEncodedFormEntity(nameValuePairs)).toString());
             fileWriter.flush();
             fileWriter.close();
 
@@ -353,6 +355,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     @Override
     public void setTickReceiver(TickEventReceiver tickEventReceiver) {
         this.tickEventReceiver = tickEventReceiver;
+        logger.info("Using tick receiver : " + tickEventReceiver.getClass());
     }
 
     @Override

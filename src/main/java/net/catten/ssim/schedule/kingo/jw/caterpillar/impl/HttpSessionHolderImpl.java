@@ -1,6 +1,7 @@
 package net.catten.ssim.schedule.kingo.jw.caterpillar.impl;
 
 import net.catten.ssim.schedule.kingo.jw.caterpillar.HttpSessionHolder;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

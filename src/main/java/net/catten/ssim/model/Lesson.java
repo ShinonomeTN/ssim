@@ -1,8 +1,12 @@
 package net.catten.ssim.model;
 
+import javax.persistence.*;
+
 /**
  * Created by catten on 2/24/17.
  */
+@Entity
+@Table(name = "lesson")
 public class Lesson {
     private Long id;
     private String term;
@@ -17,6 +21,8 @@ public class Lesson {
     private Integer turn;
     private String address;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }

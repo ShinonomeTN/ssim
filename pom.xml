@@ -6,7 +6,7 @@
 
     <groupId>net.catten</groupId>
     <artifactId>ssim</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>2.0</version>
 
     <properties>
@@ -122,6 +122,20 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.7.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -137,6 +151,61 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!-- Web project plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
+                    <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+                    <warSourceDirectory>web</warSourceDirectory>
+                    <webResources>
+                        <resource>
+                            <directory>web</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
+            <!-- Jetty container plugin-->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.2.10.v20150310</version>
+                <configuration>
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <webAppSourceDirectory>web</webAppSourceDirectory>
+                    <webApp>
+                        <compactPath>/</compactPath>
+                    </webApp>
+                    <stopKey>stop</stopKey>
+                    <stopPort>8089</stopPort>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.h2.tools.Server</mainClass>
+                    <arguments>
+                        <argument>-web</argument>
+                        <argument>-webPort</argument>
+                        <argument>8090</argument>
+                        <argument>-browser</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>

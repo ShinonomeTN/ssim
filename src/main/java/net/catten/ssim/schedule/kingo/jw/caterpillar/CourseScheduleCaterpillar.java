@@ -13,11 +13,12 @@ import java.util.Properties;
 public interface CourseScheduleCaterpillar extends TickEventProvider {
     Map<String, String> getTermsFromRemote() throws IOException;
 
-    Map<String, String> getCoursesFromRemote(Integer termCode) throws IOException;
+    Map<String, String> getCoursesFromRemote(String termCode) throws IOException;
 
-    Map<Integer, String> getTermSubjectToMemory(Integer termCode) throws IOException, InterruptedException;
+    @Deprecated
+    Map<String, String> getTermSubjectToMemory(String termCode) throws IOException, InterruptedException;
 
-    int getTermSubjectToFiles(Integer termCode, File outputFolder) throws IOException, InterruptedException;
+    int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException;
 
     boolean isLoginExpire() throws IOException;
 
