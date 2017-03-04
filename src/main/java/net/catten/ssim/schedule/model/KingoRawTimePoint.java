@@ -87,7 +87,7 @@ public class KingoRawTimePoint {
 
             String[] r = strings[1].split("-");
             if(r.length > 1){
-                for (int i = Integer.parseInt(r[0]) - 1; i < Integer.parseInt(r[1]) - 1; i++){
+                for (int i = Integer.parseInt(r[0]); i <= Integer.parseInt(r[1]); i++){
                     timepoints.add(new Timepoint(week,weekMap.get(strings[0]),i));
                 }
             }else {

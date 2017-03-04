@@ -11,6 +11,7 @@ public class Lesson {
     private Long id;
     private String term;
     private String unit;
+    private String name;
     private Double period;
     private Double credit;
     private String teacher;
@@ -125,6 +126,7 @@ public class Lesson {
                 "id=" + id +
                 ", term='" + term + '\'' +
                 ", unit='" + unit + '\'' +
+                ", name='" + name + '\'' +
                 ", period=" + period +
                 ", credit=" + credit +
                 ", teacher='" + teacher + '\'' +
@@ -135,5 +137,13 @@ public class Lesson {
                 ", turn=" + turn +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

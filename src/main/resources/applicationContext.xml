@@ -12,6 +12,7 @@
     <jpa:repositories base-package="net.catten.ssim.repositories"/>
 
     <bean class="com.alibaba.druid.pool.DruidDataSource" name="dataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
         <property name="url" value="${jdbc.url}"/>
     </bean>
 

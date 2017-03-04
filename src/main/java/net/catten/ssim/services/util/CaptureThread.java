@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,9 +49,9 @@ public class CaptureThread implements Runnable {
 
     @Override
     public void run() {
-        if(receiver == null){
+        if(this.receiver == null){
             logger.warn("No tick receiver, using default receiver!");
-            receiver = message -> logger.info("Work status : " + message[0] + "/" + message[1] + " - " + message[2]);
+            this.receiver = message -> logger.info("Work status : " + message[1] + "/" + message[0] + " - " + message[2]);
         }
 
         File file = new File(bufferPath);
@@ -60,15 +61,22 @@ public class CaptureThread implements Runnable {
             try {
                 if (taskCode != null && !taskCode.equals("")) {
                     status = STATUS_CAPTURING;
-                    if(!skipCapture) caterpillar.getTermSubjectToFiles(taskCode,file);
+                    if(!skipCapture) {
+                        logger.info("Start capturing from website.");
+                        caterpillar.getTermSubjectToFiles(taskCode, file);
+                        logger.info("Capture finished");
+                    }
                     status = STATUS_IMPORTING;
                     File[] files = file.listFiles();
                     if (files != null) {
+                        logger.info("Start importing task.");
                         int count = 0;
                         for (File f : files){
                             dao.save(expander.expand(factory.parse(f)));
-                            receiver.tick(count,files.length,f.getName());
+                            count++;
+                            this.receiver.tick(count,files.length,f.getName());
                         }
+                        logger.info("Importing finished.");
                     }
                     status = STATUS_READY;
                 } else {

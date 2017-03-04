@@ -23,6 +23,7 @@ public class LessonExpander {
                     lesson.setUnit(rawCourse.getUnit());
                     lesson.setPeriod(rawCourse.getTimeSpend());
                     lesson.setCredit(rawCourse.getPoint());
+                    lesson.setName(rawCourse.getName());
                     lesson.setTeacher(rawLesson.getTeacher());
                     lesson.setCategory(rawLesson.getClassType());
                     lesson.setAttendClass(c);
