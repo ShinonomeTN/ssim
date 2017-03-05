@@ -1,6 +1,6 @@
-package net.catten.ssim.helper;
+package net.catten.ssim.schedule.factory;
 
-import net.catten.ssim.model.Lesson;
+import net.catten.ssim.web.model.Lesson;
 import net.catten.ssim.schedule.model.KingoRawCourse;
 import net.catten.ssim.schedule.model.KingoRawLesson;
 import net.catten.ssim.schedule.model.Timepoint;

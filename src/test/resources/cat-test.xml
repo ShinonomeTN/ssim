@@ -13,10 +13,10 @@
         <!--<property name="url" value="jdbc:h2:file:.db/h2.db;AUTO_SERVER=TRUE"/>-->
     </bean>
 
-    <jpa:repositories base-package="net.catten.ssim.repositories"/>
+    <jpa:repositories base-package="net.catten.ssim.web.repositories"/>
     <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" name="entityManagerFactory">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="net.catten.ssim.model"/>
+        <property name="packagesToScan" value="net.catten.ssim.web.model"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
@@ -37,9 +37,9 @@
 
     <!-- caterpillar settings -->
 
-    <bean class="net.catten.ssim.services.util.TickModel" name="tickReceiver"/>
+    <bean class="net.catten.ssim.web.services.util.TickModel" name="tickReceiver"/>
 
-    <bean class="net.catten.ssim.services.util.CaptureThread">
+    <bean class="net.catten.ssim.web.services.util.CaptureThread">
         <property name="caterpillar">
             <bean class="net.catten.ssim.schedule.kingo.jw.caterpillar.impl.KingoJWCaterpillar">
                 <property name="loginProperties">
@@ -53,7 +53,7 @@
         </property>
 
         <property name="expander">
-            <bean class="net.catten.ssim.helper.LessonExpander"/>
+            <bean class="net.catten.ssim.schedule.factory.LessonExpander"/>
         </property>
 
         <property name="bufferPath" value="./web/WEB-INF/captureBuffer"/>

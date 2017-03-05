@@ -1,25 +1,17 @@
-package net.catten.ssim.services.util;
+package net.catten.ssim.web.services.util;
 
 import net.catten.ssim.common.events.TickEventReceiver;
-import net.catten.ssim.helper.LessonExpander;
-import net.catten.ssim.model.Lesson;
-import net.catten.ssim.repositories.LessonDAO;
+import net.catten.ssim.schedule.factory.LessonExpander;
+import net.catten.ssim.web.repositories.LessonDAO;
 import net.catten.ssim.schedule.factory.CourseFactory;
 import net.catten.ssim.schedule.kingo.jw.caterpillar.CourseScheduleCaterpillar;
-import org.apache.commons.io.FileUtils;
 //import org.apache.log4j.Logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by catten on 3/4/17.

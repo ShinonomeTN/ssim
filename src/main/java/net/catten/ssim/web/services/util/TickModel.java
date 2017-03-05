@@ -1,4 +1,4 @@
-package net.catten.ssim.services.util;
+package net.catten.ssim.web.services.util;
 
 import net.catten.ssim.common.events.TickEventReceiver;
 

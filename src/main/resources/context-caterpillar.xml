@@ -3,9 +3,9 @@
        xmlns:bean="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean class="net.catten.ssim.services.util.TickModel" name="tickReceiver"/>
+    <bean class="net.catten.ssim.web.services.util.TickModel" name="tickReceiver"/>
 
-    <bean class="net.catten.ssim.services.util.CaptureThread">
+    <bean class="net.catten.ssim.web.services.util.CaptureThread">
         <property name="caterpillar">
             <bean class="net.catten.ssim.schedule.kingo.jw.caterpillar.impl.KingoJWCaterpillar">
                 <property name="loginProperties">
@@ -20,7 +20,7 @@
         </property>
 
         <property name="expander">
-            <bean class="net.catten.ssim.helper.LessonExpander"/>
+            <bean class="net.catten.ssim.schedule.factory.LessonExpander"/>
         </property>
 
         <property name="receiver" ref="tickReceiver"/>

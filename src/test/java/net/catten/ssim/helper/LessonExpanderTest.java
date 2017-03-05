@@ -1,16 +1,13 @@
 package net.catten.ssim.helper;
 
-import net.catten.ssim.model.Lesson;
+import net.catten.ssim.schedule.factory.LessonExpander;
+import net.catten.ssim.web.model.Lesson;
 import net.catten.ssim.schedule.factory.CourseFactory;
 import net.catten.ssim.schedule.model.KingoRawCourse;
-import net.catten.ssim.schedule.model.KingoRawLesson;
-import net.catten.ssim.schedule.model.Timepoint;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by catten on 2/24/17.

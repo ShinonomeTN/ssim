@@ -1,6 +1,6 @@
-package net.catten.ssim.repositories;
+package net.catten.ssim.web.repositories;
 
-import net.catten.ssim.model.Lesson;
+import net.catten.ssim.web.model.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

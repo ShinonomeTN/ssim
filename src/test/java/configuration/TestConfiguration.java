@@ -1,6 +1,6 @@
 package configuration;
 
-import net.catten.ssim.repositories.LessonDAO;
+import net.catten.ssim.web.repositories.LessonDAO;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

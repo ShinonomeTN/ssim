@@ -1,8 +1,6 @@
-package net.catten.ssim.services;
+package net.catten.ssim.web.services;
 
-import net.catten.ssim.common.events.TickEventReceiver;
 import net.catten.ssim.schedule.kingo.jw.caterpillar.CourseScheduleCaterpillar;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**

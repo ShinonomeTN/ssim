@@ -1,4 +1,4 @@
-package net.catten.ssim.model;
+package net.catten.ssim.web.model;
 
 import javax.persistence.*;
 

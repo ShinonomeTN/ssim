@@ -1,18 +1,14 @@
-package net.catten.ssim.services.util;
+package net.catten.ssim.web.services.util;
 
-import configuration.TestConfiguration;
-import net.catten.ssim.repositories.LessonDAO;
+import net.catten.ssim.web.repositories.LessonDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by catten on 3/4/17.

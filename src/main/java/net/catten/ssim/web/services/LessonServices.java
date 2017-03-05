@@ -1,6 +1,6 @@
-package net.catten.ssim.services;
+package net.catten.ssim.web.services;
 
-import net.catten.ssim.repositories.LessonDAO;
+import net.catten.ssim.web.repositories.LessonDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
