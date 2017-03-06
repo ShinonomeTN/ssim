@@ -8,9 +8,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CoursesUpdateServices {
-    private CourseScheduleCaterpillar caterpillar;
 
     private Thread captureThread;
+
+
+    public void setCaptureThread(Thread captureThread) {
+        this.captureThread = captureThread;
+    }
 
     public void fireCaptureThread(){
 
