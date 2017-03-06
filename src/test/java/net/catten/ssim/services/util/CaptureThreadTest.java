@@ -34,9 +34,10 @@ public class CaptureThreadTest {
     @Test
     public void run() throws Exception {
         System.out.println("Current path : " + new File("").getAbsolutePath());
-        captureThread.setTaskCode("20141");
-        captureThread.setSkipCapture(true);
+        captureThread.setTaskCode("20160");
+        //captureThread.setSkipCapture(true);
         captureThread.setDao(lessonDAO);
+        lessonDAO.flush();
         captureThread.run();
     }
 
