@@ -1,11 +1,13 @@
 package net.catten.ssim.web.controller;
 
 import net.catten.ssim.web.services.LessonServices;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sun.rmi.runtime.Log;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/api")
 public class ApiController {
+
+    private Logger logger = Logger.getLogger(this.getClass());
 
     private LessonServices lessonServices;
 
@@ -31,6 +35,7 @@ public class ApiController {
 
     @RequestMapping("/terms/{termName}/weeks")
     public Model termWeekCount(@PathVariable("termName") String termName, Model model) {
+        logger.info(termName);
         model.addAttribute("weeks",lessonServices.queryWeeks(termName));
         return model;
     }

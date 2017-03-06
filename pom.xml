@@ -208,6 +208,9 @@
                     <webApp>
                         <compactPath>/</compactPath>
                     </webApp>
+                    <jvmArgs>
+                        org.eclipse.jetty.util.URI.charset=UTF-8
+                    </jvmArgs>
                     <stopKey>stop</stopKey>
                     <stopPort>8089</stopPort>
                 </configuration>
