@@ -54,7 +54,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
         this.stringProperties = new Properties();
         this.loginProperties = loginProperties;
 
-        stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/jw/strings.properties"));
+        stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/net/catten/ssim/schedule/kingo/jw/strings.properties"));
         logger.info("Properties Loaded.");
 
         setUserAgent(loginProperties.getProperty("userAgent"));

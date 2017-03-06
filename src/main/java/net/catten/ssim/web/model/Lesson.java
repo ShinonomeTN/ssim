@@ -6,6 +6,7 @@ import javax.persistence.*;
  * Created by catten on 2/24/17.
  */
 @Entity
+@Cacheable
 @Table(name = "lesson")
 public class Lesson {
     private Long id;

@@ -22,6 +22,12 @@ web/WEB-INF/captureBuffer/
 db/
 
 #
+# Logs
+#
+
+log/
+
+#
 # login.properties stored sensitive infomation
 #
 /**/login.properties
