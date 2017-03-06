@@ -45,4 +45,8 @@ public class TickModel implements TickEventReceiver {
     public synchronized void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+    public Integer getTaskCurrent() {
+        return taskCurrent;
+    }
 }

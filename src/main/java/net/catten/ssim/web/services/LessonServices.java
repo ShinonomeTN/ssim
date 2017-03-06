@@ -30,7 +30,18 @@ public class LessonServices {
     }
 
     public List<Lesson> queryScheduleInTerm(String termName, String attendClass){
-        return lessonDAO.findAll((root, cq, cb) -> cb.and(cb.equal(root.get("term"),termName),cb.equal(root.get("attendclass"),attendClass)));
+        return lessonDAO.findAll((root, cq, cb) -> cb.and(
+                cb.equal(root.get("term"),termName),
+                cb.equal(root.get("attendclass"),attendClass))
+        );
+    }
+
+    public List<Lesson> queryScheduleInTermInWeek(String termName, String attendClass, Integer week){
+        return lessonDAO.findAll((root, criteriaQuery, cb) -> cb.and(
+                cb.equal(root.get("term"),termName),
+                cb.equal(root.get("attendClass"),attendClass),
+                cb.equal(root.get("week"),week)
+        ));
     }
 
     public Integer queryWeeks(String termName){

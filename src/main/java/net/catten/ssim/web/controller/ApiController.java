@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import sun.rmi.runtime.Log;
 
 import java.util.List;
@@ -33,16 +34,30 @@ public class ApiController {
         return model;
     }
 
-    @RequestMapping("/terms/{termName}/weeks")
-    public Model termWeekCount(@PathVariable("termName") String termName, Model model) {
+    @RequestMapping("/weeks")
+    public Model termWeekCount(@RequestParam("termName") String termName, Model model) {
         logger.info(termName);
         model.addAttribute("weeks",lessonServices.queryWeeks(termName));
         return model;
     }
 
-    @RequestMapping("/terms/{termName}/classes")
-    public Model termClasses(@PathVariable("termName") String termName, Model model) {
+    @RequestMapping("/classes")
+    public Model termClasses(@RequestParam("termName") String termName, Model model) {
         model.addAttribute("data",lessonServices.listClassesInTerm(termName));
+        return model;
+    }
+
+    @RequestMapping("/lessons")
+    public Model weekClasses(
+            @RequestParam("termName") String termName,
+            @RequestParam(value = "week",required = false) Integer week,
+            @RequestParam("className") String className,
+            Model model){
+        if(week != null){
+            model.addAttribute("data",lessonServices.queryScheduleInTermInWeek(termName,className,week));
+        }else {
+            model.addAttribute("data",lessonServices.queryScheduleInTerm(termName,className));
+        }
         return model;
     }
 }

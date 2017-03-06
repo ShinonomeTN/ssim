@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface LessonDAO extends JpaRepository<Lesson,Long>, JpaSpecificationExecutor<Lesson>{
 
-    @Query("select distinct l.term from Lesson l")
+    @Query("select distinct l.term from Lesson l order by l.term desc ")
     List<String> getTerms();
 
     @Query("select max(l.week) from Lesson l where l.term = ?1")
