@@ -5,10 +5,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import sun.rmi.runtime.Log;
 
 import java.util.List;
 
@@ -52,12 +50,11 @@ public class ApiController {
             @RequestParam("termName") String termName,
             @RequestParam(value = "week",required = false) Integer week,
             @RequestParam("className") String className,
+            @RequestParam(value = "ignoreType",required = false) List<String> ignoreTypes,
             Model model){
-        if(week != null){
-            model.addAttribute("data",lessonServices.queryScheduleInTermInWeek(termName,className,week));
-        }else {
-            model.addAttribute("data",lessonServices.queryScheduleInTerm(termName,className));
-        }
+
+        model.addAttribute("data",lessonServices.querySchedule(termName,className,week,ignoreTypes));
+
         return model;
     }
 }
