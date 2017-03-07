@@ -7,10 +7,14 @@
 
     <!--<util:component-scan base-package="net.catten.ssim.services"/>-->
 
+    <util:property-placeholder location="classpath*:db.properties"/>
     <bean class="com.alibaba.druid.pool.DruidDataSource" name="dataSource">
-        <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:file:db/classSchedule;AUTO_SERVER=TRUE"/>
-        <!--<property name="url" value="jdbc:h2:file:.db/h2.db;AUTO_SERVER=TRUE"/>-->
+        <!--<property name="driverClassName" value="org.h2.Driver"/>-->
+        <!--<property name="url" value="jdbc:h2:file:db/classSchedule;AUTO_SERVER=TRUE"/>-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
     </bean>
 
     <jpa:repositories base-package="net.catten.ssim.web.repositories"/>
@@ -22,7 +26,7 @@
         </property>
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <!--<prop key="hibernate.show_sql">true</prop>-->
             </props>
