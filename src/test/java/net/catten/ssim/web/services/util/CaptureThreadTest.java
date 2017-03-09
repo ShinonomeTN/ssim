@@ -29,7 +29,7 @@ public class CaptureThreadTest {
 
     @Test
     public void run() throws Exception {
-        String[] terms = new String[]{"20140","20141","20150","20151","20160","20161"};//20141 20160
+        String[] terms = new String[]{"20140","20141","20150","20151","20160","20161"};
         System.out.println("Current path : " + new File("").getAbsolutePath());
         captureThread.setDao(lessonDAO);
 

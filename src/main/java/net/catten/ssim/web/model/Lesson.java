@@ -7,7 +7,10 @@ import javax.persistence.*;
  */
 @Entity
 @Cacheable
-@Table(name = "lesson")
+@Table(name = "lesson",indexes = {
+        @Index(name = "index_term",columnList = "term"),
+        @Index(name = "index_attend_class", columnList = "attendClass")
+})
 public class Lesson {
     private Long id;
     private String term;

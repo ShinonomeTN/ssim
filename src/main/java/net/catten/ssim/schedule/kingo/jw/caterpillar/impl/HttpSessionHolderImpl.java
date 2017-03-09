@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,7 +43,10 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
         websiteContext = new BasicHttpContext();
         websiteContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
-        httpClient = HttpClients.createDefault();
+        httpClient = HttpClients
+                .custom()
+                .setRetryHandler((e, i, httpContext) -> i <= 5 && e instanceof NoHttpResponseException)
+                .build();
     }
 
     @Override
