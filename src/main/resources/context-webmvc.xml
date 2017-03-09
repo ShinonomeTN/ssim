@@ -12,6 +12,14 @@
 
     <!--<mvc:view-controller path="/" view-name="index"/>-->
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/data/refresh"/>
+            <bean class="net.catten.ssim.web.interceptors.PermissionInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="order" value="1"/>
         <property name="defaultViews">

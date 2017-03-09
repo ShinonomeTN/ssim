@@ -2,6 +2,7 @@ package net.catten.ssim.schedule.kingo.jw.caterpillar.impl;
 
 import net.catten.ssim.schedule.kingo.jw.caterpillar.HttpSessionHolder;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -16,6 +17,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -23,6 +26,8 @@ import java.io.IOException;
  * Created by catten on 2/23/17.
  */
 public class HttpSessionHolderImpl implements HttpSessionHolder {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String userAgent = "HttpSessionHolder/Apache HttpClient/JRE";
     private String charset = "UTF-8";
