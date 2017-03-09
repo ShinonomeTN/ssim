@@ -18,6 +18,7 @@ public class TickModel implements TickEventReceiver {
 
         if (!taskTotal.equals(_total)) taskTotal = _total;
         setTaskCurrent(_current);
+        setTaskStatus((String) message[2]);
     }
 
     /*

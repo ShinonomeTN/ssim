@@ -1,6 +1,7 @@
 package net.catten.ssim.web.services;
 
 import net.catten.ssim.schedule.kingo.jw.caterpillar.CourseScheduleCaterpillar;
+import net.catten.ssim.web.repositories.LessonDAO;
 import net.catten.ssim.web.services.util.CaptureThread;
 import net.catten.ssim.web.services.util.TickModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,9 @@ public class CoursesUpdateServices {
         return captureThread.getStatus();
     }
 
-    public void fireCaptureThread(){
+    public void fireCaptureThread(boolean skipCapture){
         captureThreadHolder = new Thread(captureThread);
+        captureThread.setSkipCapture(skipCapture);
         captureThreadHolder.start();
     }
 

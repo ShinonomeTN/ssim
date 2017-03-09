@@ -25,7 +25,7 @@
 
         <property name="receiver" ref="tickReceiver"/>
 
-        <property name="bufferPath" value="WEB-INF/captureBuffer"/>
+        <property name="bufferPath" value="./web/WEB-INF/captureBuffer"/>
     </bean>
 
 </beans>

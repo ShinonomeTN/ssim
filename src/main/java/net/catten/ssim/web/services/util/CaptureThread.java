@@ -41,6 +41,7 @@ public class CaptureThread implements Runnable {
 
     @Override
     public void run() {
+        //Provide a default ticker, output status to log.
         if(this.receiver == null){
             logger.warn("No tick receiver, using default receiver!");
             this.receiver = message -> logger.info("Work status : " + message[1] + "/" + message[0] + " - " + message[2]);
@@ -51,7 +52,7 @@ public class CaptureThread implements Runnable {
             logger.info("Directory : " + file.getAbsolutePath());
 
             try {
-                if (taskCode != null && !taskCode.equals("")) {
+                if ((taskCode != null && !taskCode.equals("")) || skipCapture) {
                     status = STATUS_CAPTURING;
                     if(!skipCapture) {
                         logger.info("Start capturing from website.");
@@ -66,7 +67,7 @@ public class CaptureThread implements Runnable {
                         for (File f : files){
                             dao.save(expander.expand(factory.parse(f)));
                             count++;
-                            this.receiver.tick(count,files.length,f.getName());
+                            receiver.tick(count,files.length,f.getName());
                         }
                         logger.info("Importing finished.");
                     }
@@ -112,11 +113,11 @@ public class CaptureThread implements Runnable {
         this.receiver = receiver;
     }
 
-    @Autowired
     public LessonDAO getDao() {
         return dao;
     }
 
+    @Autowired
     public void setDao(LessonDAO dao) {
         this.dao = dao;
     }

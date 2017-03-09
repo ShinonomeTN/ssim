@@ -14,7 +14,7 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/data/refresh"/>
+            <mvc:mapping path="/api/manage/*"/>
             <bean class="net.catten.ssim.web.interceptors.PermissionInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

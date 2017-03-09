@@ -35,7 +35,7 @@ public class ApiController {
     @RequestMapping("/weeks")
     public Model termWeekCount(@RequestParam("termName") String termName, Model model) {
         logger.info(termName);
-        model.addAttribute("weeks",lessonServices.queryWeeks(termName));
+        model.addAttribute("data",lessonServices.queryWeeks(termName));
         return model;
     }
 
