@@ -1,9 +1,9 @@
 package net.catten.ssim.web.services.util;
 
 import net.catten.ssim.common.events.TickEventReceiver;
+import net.catten.ssim.schedule.factory.CourseFactory;
 import net.catten.ssim.schedule.factory.LessonExpander;
 import net.catten.ssim.web.repositories.LessonDAO;
-import net.catten.ssim.schedule.factory.CourseFactory;
 import net.catten.ssim.schedule.kingo.jw.caterpillar.CourseScheduleCaterpillar;
 //import org.apache.log4j.Logger;
 import org.slf4j.Logger;

@@ -4,7 +4,7 @@
     <h1>简单课表查询 <small>for 岭南职业技术学院</small></h1>
 </div>
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 align="center">学期</h2>

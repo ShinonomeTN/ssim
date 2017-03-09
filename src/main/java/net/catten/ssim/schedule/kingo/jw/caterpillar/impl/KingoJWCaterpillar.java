@@ -1,6 +1,7 @@
 package net.catten.ssim.schedule.kingo.jw.caterpillar.impl;
 
-import net.catten.ssim.schedule.kingo.jw.caterpillar.HttpSessionHolder;
+import net.catten.ssim.common.http.HttpSessionHolder;
+import net.catten.ssim.common.http.impl.HttpSessionHolderImpl;
 import net.catten.ssim.schedule.kingo.jw.caterpillar.CourseScheduleCaterpillar;
 import net.catten.ssim.common.events.TickEventReceiver;
 import org.apache.commons.io.output.FileWriterWithEncoding;
@@ -172,50 +173,6 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
             return resultMap;
         }
         return null;
-    }
-
-    /**
-     * Get all subjects in a term and save them to an array.
-     *
-     * @param termCode
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    @Override
-    public Map<String, String> getTermSubjectToMemory(String termCode) throws IOException, InterruptedException {
-
-        if (isLoginExpire()) initializeSession();
-        logger.info("checking login status finished");
-
-        String referPage = stringProperties.getProperty("classInfoQueryPage");
-        String targetPage = stringProperties.getProperty("subjectQueryPage");
-
-
-        LinkedList<NameValuePair> nameValuePairs = new LinkedList<>();
-        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", termCode));
-        nameValuePairs.add(new BasicNameValuePair("gs", loginProperties.getProperty("tableFormat")));
-        nameValuePairs.add(new BasicNameValuePair("txt_yzm", ""));
-        nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", ""));
-
-        Map<String, String> results = new HashMap<>();
-
-        logger.info("Capturing subject data...");
-        Map<String, String> lessonListOfTheTerm = getCoursesFromRemote(termCode);
-        int total = lessonListOfTheTerm.size();
-        int current = 0;
-        logger.info("total item count - " + lessonListOfTheTerm.keySet().size());
-        for (String key : lessonListOfTheTerm.keySet()) {
-            current++;
-            nameValuePairs.removeLast();
-            nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", key));
-            results.put(key, httpSessionHolder.post(targetPage , referPage, new UrlEncodedFormEntity(nameValuePairs)).data());
-            tickEventReceiver.tick(total, current, key);
-            Thread.sleep(delayMS);
-        }
-        System.out.println();
-        logger.info("Capture finished.");
-        return results;
     }
 
     /**

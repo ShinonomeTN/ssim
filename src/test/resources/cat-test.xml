@@ -53,11 +53,11 @@
         </property>
 
         <property name="factory">
-            <bean class="net.catten.ssim.schedule.factory.CourseFactory"/>
+            <bean class="net.catten.ssim.schedule.factory.impl.CourseFactoryImpl"/>
         </property>
 
         <property name="expander">
-            <bean class="net.catten.ssim.schedule.factory.LessonExpander"/>
+            <bean class="net.catten.ssim.schedule.factory.impl.LessonExpanderImpl"/>
         </property>
 
         <property name="bufferPath" value="./web/WEB-INF/captureBuffer"/>

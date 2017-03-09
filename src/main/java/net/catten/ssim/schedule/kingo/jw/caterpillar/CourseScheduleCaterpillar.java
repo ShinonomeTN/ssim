@@ -15,9 +15,6 @@ public interface CourseScheduleCaterpillar extends TickEventProvider {
 
     Map<String, String> getCoursesFromRemote(String termCode) throws IOException;
 
-    @Deprecated
-    Map<String, String> getTermSubjectToMemory(String termCode) throws IOException, InterruptedException;
-
     int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException;
 
     boolean isLoginExpire() throws IOException;

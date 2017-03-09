@@ -1,16 +1,13 @@
-package net.catten.ssim.schedule.kingo.jw.caterpillar.impl;
+package net.catten.ssim.common.http.impl;
 
-import net.catten.ssim.schedule.kingo.jw.caterpillar.HttpSessionHolder;
-import org.apache.commons.io.IOUtils;
+import net.catten.ssim.common.http.HttpSessionHolder;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
@@ -42,6 +39,9 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
         cookieStore = new BasicCookieStore();
         websiteContext = new BasicHttpContext();
         websiteContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+
+        logger.info("Using userAgent : " + userAgent);
+        logger.info("Using charset : " + charset);
 
         httpClient = HttpClients
                 .custom()
@@ -78,6 +78,7 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+        logger.info("Set userAgent to " + userAgent);
     }
 
     public String getCharset() {
@@ -86,6 +87,7 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
 
     public void setCharset(String charset) {
         this.charset = charset;
+        logger.info("Set charset to " + charset);
     }
 
     public CookieStore getCookieStore() {

@@ -1,4 +1,4 @@
-package net.catten.ssim.schedule.kingo.jw.caterpillar;
+package net.catten.ssim.common.http;
 
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.jsoup.nodes.Document;
