@@ -1,5 +1,6 @@
 package net.catten.ssim.web.controller;
 
+import net.catten.ssim.web.model.Lesson;
 import net.catten.ssim.web.services.LessonServices;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

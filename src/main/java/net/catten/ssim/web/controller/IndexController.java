@@ -1,0 +1,67 @@
+package net.catten.ssim.web.controller;
+
+import net.catten.ssim.web.model.Lesson;
+import net.catten.ssim.web.services.LessonServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+/**
+ * Created by cattenlinger on 2017/3/10.
+ */
+@Controller
+@RequestMapping("")
+public class IndexController {
+
+    private LessonServices lessonServices;
+
+    @Autowired
+    public void setLessonServices(LessonServices lessonServices) {
+        this.lessonServices = lessonServices;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String index(Model model){
+        model.addAttribute("terms",lessonServices.querySchoolTerms());
+        return "index";
+    }
+
+    @RequestMapping(value = "/terms/{termName}",method = RequestMethod.GET)
+    public String termInfo(@PathVariable("termName") String termName, Model model){
+
+        model.addAttribute("term",termName);
+        Integer weekCount = lessonServices.queryWeeks(termName);
+        if(weekCount == null) return "nodata";
+        model.addAttribute("weeks",weekCount);
+
+        model.addAttribute("classes",lessonServices.listClassesInTerm(termName));
+        model.addAttribute("categories",lessonServices.listClassTypes());
+        return "term";
+    }
+
+    @RequestMapping(value = "/schedule")
+    public String querySchedule(
+            @RequestParam("termName") String termName,
+            @RequestParam("week") Integer week,
+            @RequestParam("class") String className,
+            @RequestParam(value = "ignoreType",required = false) List<String> ignoreTypes,
+            Model model){
+
+        model.addAttribute("term",termName);
+
+        List<Lesson> lessons = lessonServices.querySchedule(termName, className, week, ignoreTypes);
+        if(lessons == null || lessons.size() == 0) return "nodata";
+
+        model.addAttribute("schedule",lessons);
+        model.addAttribute("week",week);
+        model.addAttribute("class",className);
+
+        return "schedule";
+    }
+}

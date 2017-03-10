@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created by cattenlinger on 2017/3/9.
  */
 @Controller
+@RequestMapping("/secure/token")
 public class TokenController {
 
     private SimpleUserServices userServices;
@@ -21,7 +22,7 @@ public class TokenController {
         this.userServices = userServices;
     }
 
-    @RequestMapping(value = "/secure/token",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public Model getToken(@RequestParam("username") String username, @RequestParam("password") String password, Model model){
         String token = userServices.generateToken(username,password);
         model.addAttribute("token",token);
