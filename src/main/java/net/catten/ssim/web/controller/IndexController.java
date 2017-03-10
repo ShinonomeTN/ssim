@@ -77,7 +77,7 @@ public class IndexController {
 
         model.addAttribute("schedule",sortedLessons);
         model.addAttribute("week",week);
-        model.addAttribute("class",className);
+        model.addAttribute("className",className);
 
         return "schedule";
     }

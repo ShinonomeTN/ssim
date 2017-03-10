@@ -8,7 +8,7 @@
             </div>
             <div class="list-group">
                 <#list terms as term>
-                    <a class="list-group-item" href="/terms/${term}">${term}</a>
+                    <a class="list-group-item" href="/cs/terms/${term}">${term}</a>
                 </#list>
             </div>
         </div>

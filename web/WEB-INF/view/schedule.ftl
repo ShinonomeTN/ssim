@@ -1,14 +1,14 @@
 <#import "temp/main.ftl" as temp>
-<@temp.body title="${class} 在第 ${week} 周的课程 - ${term}">
+<@temp.body title="${className} 在第 ${week} 周的课程 - ${term}">
 <div class="col-md-12">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3>
                 <small><b>${term}</b></small>
-                <br>${class}在第${week}周的课程
+                <br>${className}在第${week}周的课程
             </h3>
             <div>
-                <a class="btn btn-primary btn-sm pull-right" href="/terms/${term}">返回</a>
+                <a class="btn btn-primary btn-sm pull-right" href="/cs/terms/${term}">返回</a>
                 <div class="clearfix"></div>
             </div>
         </div>

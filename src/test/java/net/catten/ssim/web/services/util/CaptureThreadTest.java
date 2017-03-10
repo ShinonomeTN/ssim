@@ -38,10 +38,10 @@ public class CaptureThreadTest {
 //        captureThread.setDao(lessonDAO);
 //        captureThread.run();
 
-        for (String term : terms){
-            captureThread.setTaskCode(term);
-            captureThread.run();
-        }
+//        for (String term : terms){
+//            captureThread.setTaskCode(term);
+//            captureThread.run();
+//        }
     }
 
 }

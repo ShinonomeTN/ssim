@@ -7,7 +7,7 @@
                 <h2>抱歉，没有数据</h2>
             </div>
             <div class="col-md-4 col-md-offset-4">
-                <a href="/" class="btn btn-block btn-primary">返回主页</a>
+                <a href="/cs" class="btn btn-block btn-primary">返回主页</a>
             </div>
         </div>
     </div>
