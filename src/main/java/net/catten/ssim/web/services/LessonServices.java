@@ -72,4 +72,8 @@ public class LessonServices {
     public List<String> listClassesInTerm(String termName){
         return lessonDAO.getAttendClassesInTerm(termName);
     }
+
+    public List<String> listClassTypes(){
+        return lessonDAO.getTypes();
+    }
 }

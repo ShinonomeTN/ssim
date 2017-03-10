@@ -22,4 +22,7 @@ public interface LessonDAO extends JpaRepository<Lesson,Long>, JpaSpecificationE
 
     @Query("select distinct l.attendClass from Lesson l where l.term = ?1 order by l.attendClass desc")
     List<String> getAttendClassesInTerm(String term);
+
+    @Query("select distinct l.category from Lesson l")
+    List<String> getTypes();
 }

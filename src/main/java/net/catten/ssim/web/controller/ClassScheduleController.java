@@ -15,9 +15,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/api")
-public class ApiController {
-
-    private Logger logger = Logger.getLogger(this.getClass());
+public class ClassScheduleController {
 
     private LessonServices lessonServices;
 
@@ -34,27 +32,32 @@ public class ApiController {
 
     @RequestMapping("/weeks")
     public Model termWeekCount(@RequestParam("termName") String termName, Model model) {
-        logger.info(termName);
-        model.addAttribute("data",lessonServices.queryWeeks(termName));
+        model.addAttribute("data", lessonServices.queryWeeks(termName));
         return model;
     }
 
     @RequestMapping("/classes")
     public Model termClasses(@RequestParam("termName") String termName, Model model) {
-        model.addAttribute("data",lessonServices.listClassesInTerm(termName));
+        model.addAttribute("data", lessonServices.listClassesInTerm(termName));
         return model;
     }
 
     @RequestMapping("/lessons")
-    public Model weekClasses(
+    public Model lessons(
             @RequestParam("termName") String termName,
-            @RequestParam(value = "week",required = false) Integer week,
+            @RequestParam(value = "week", required = false) Integer week,
             @RequestParam("className") String className,
-            @RequestParam(value = "ignoreType",required = false) List<String> ignoreTypes,
-            Model model){
+            @RequestParam(value = "ignoreType", required = false) List<String> ignoreTypes,
+            Model model) {
 
-        model.addAttribute("data",lessonServices.querySchedule(termName,className,week,ignoreTypes));
+        model.addAttribute("data", lessonServices.querySchedule(termName, className, week, ignoreTypes));
 
+        return model;
+    }
+
+    @RequestMapping("/types")
+    public Model lessonTypes(Model model) {
+        model.addAttribute("data",lessonServices.listClassTypes());
         return model;
     }
 }

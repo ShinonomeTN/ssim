@@ -9,7 +9,8 @@ import javax.persistence.*;
 @Cacheable
 @Table(name = "lesson",indexes = {
         @Index(name = "index_term",columnList = "term"),
-        @Index(name = "index_attend_class", columnList = "attendClass")
+        @Index(name = "index_attend_class", columnList = "attendClass"),
+        @Index(name = "index_category", columnList = "category")
 })
 public class Lesson {
     private Long id;
