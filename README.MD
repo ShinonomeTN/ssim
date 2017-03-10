@@ -1,98 +1,112 @@
-#青果网教务系统课表数据抓取工具
+#简单的课表查询网站
 
-此工具专门用于批量抓取青果网教务系统的“课程课表”页面数据，并整理成原始课程数据导入到数据库
+为针对广东岭南职业技术学院所使用的教务系统（青果网教务系统）的课表爬取与整理网站
 
-##构建
+##公共API
 
-**需要先安装 maven 然后再构建此工程**
+通过此类 API 与服务器通讯均使用 UTF-8 编码格式
 
-在工程目录里执行
+####课表查询 API
 
-	mvn clean package
+#####/api/terms
 
-构建完之后文件在 SubjectImporter 的 target 里，ssim-main-2.0.jar 为可执行 jar 包，lib 文件夹为所依赖的组件。
+查询所有可用学期
 
-##执行命令
+- 方法 ： GET
+- 无传参
+- 返回：学期字符串数组
 
-总共有三种启动方式
+```
+{
+	"data":["2016-2017学年第二学期"]
+}
+```
 
-	java -jar ssim-main-2.0.jar 学期代号
-	java -jar ssim-main-2.0.jar 学期代号 缓存文件夹
-	java -jar ssim-main-2.0.jar 学期代号 缓存文件夹 --continue
+####/api/weeks
 
-其中学期代号格式是年份+学期，例如20140，2014是年份，0为第一学期（1就是第二学期）。缓存文件夹是制定爬虫把网页缓存在哪里。
---continue 选项是直接跳过抓取，仅丛缓存文件夹导入。
+查询学期最大周数
 
-爬虫启动之后，将会先检查有没有数据库里面有没有存储数据用的表，没有将自动创建。表将以 学期代号 + 下划线 + 表名 的形在没有指定缓存文件夹的情况下，爬虫会把网页存储到内存中然后再导入到数据库。在指定了缓存文件夹的情况下，爬虫会把网页缓存到指定文件夹。
-导入数据库前爬虫会把所有网页预先格式化成对象全部存储到内存里。800个结果约占用200MB内存。
+- 方法 ： GET
+- 参数
+	- termName ： 学期全称
+- 返回 ： 最大周数（从 1 开始算起）
 
-##配置文件
+```
+{
+	"data":19
+}
+```
 
-配置文件有两个： login.properties 和 connection.properties
+####/api/classes
 
-### login.properties 说明
+查询学期内上课的班级
 
-此配置文件是关于爬虫的配置文件。
+- 方法 ： GET
+- 参数
+	- termName ： 学期全称
+- 返回 ： 学期内所有上课班级
 
-模板如下：
+```
+{
+	"data":["班级名称 1"，"班级名称 2", "班级名称 3", ....]
+}
+```
 
-	username=
-	password=
-	role=
-	charset=GB2312
-	tableFormat=2
-	delay=600
-	userAgent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.90 Safari/537.36undefined5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.90 Safari/537.36 SN:NULL
+####/api/types
 
-username 填登录帐号。 password 填登录密码。 role 指登录的类型，学生的类型是 STU ，其他类型请自行查看青果网教务登录框的其他值。charset 是页面编码，默认 GB2312  不要改，除非青果网更改页面编码。 tableFormat 是爬取的课表格式，不用改。 delay 是抓取下一个页面前的等待时间，单位毫秒，建议不要低于400，容易卡住。 userAgent 是要伪装成什么浏览器，如果你有特殊偏好的话可以改成其他浏览器，这里默认是 Linux 下的 Chrome。
+查询所有课程类型
 
-### connection.properties 说明
+- 方法 ： GET
+- 无传参
+- 返回 ： 所有课程类型
 
-此配置文件是关于数据库的配置文件。
+```
+{
+	"data":[
+		"专业基础课/必修课",
+		"专业课/必修课",
+		"专业课/限选课",
+		"公共课/任选课",
+		"公共课/必修课"，
+		.... ]
+}
+```
 
-模板如下：
+####/api/lessons
 
-	hostname=localhost:3306
-	username=
-	password=
-	database=
+- 方法 ： GET
+- 参数 ：
+	- termName ： 学期全称
+	- week ： 周数（从 1 开始算起），可选，不填则返回整个学期课表
+	- className ： 上课班级全称
+	- ignoreType ： 忽略的课程类型，数组，可选，不填则返回全部类型的课程（包括因为教务录入问题而产生的重复课程）
+- 返回 ： 指定条件的课表
 
- hostname 填 mysql 服务器的地址，必须带上端口号。 username 和 password 是数据库用户和对应的密码。 database 指目标数据库。
+```
+{
+	"data":[
+		{
+			"id":158758,
+			"term":"2016-2017学年第二学期", // 学期
+			"unit":"外语外贸学院",			// 学院
+			"name":"公共外语（二）",		// 课程名称
+			"period":63.0,					// 课时
+			"credit":3.5,					// 学分
+			"teacher":"XXX",				// 上课教师
+			"category":"公共课/必修课",		// 课程类型
+			"attendClass":"xx通信技术x班",	//上课班级
+			"week":1,						// 周数
+			"weekday":5,					// 星期几
+			"turn":5,						// 第几节课
+			"address":"C栋B609"				// 地点
+		}, .....]
+}
+```
 
-##数据库表
+***
+##参考
 
-爬虫使用两张表存储所有的课表数据，一张是 subject 一张是 lessons。字段含义分别如下：
-
-### subjects 表
-
-
-id : 课程的唯一 ID
-term : 课程学期
-name : 课程名称
-code : 课程代号
-unit : 所属学院
-timeSpend : 学时
-point : 学分
-
-#### lessons 表
-
-id	: 自增 id
-subject : 对应 subjects 表内的课程 id
-teacher : 任课老师姓名
-classNumber : 对应青果网表格的上课班号
-attendAmount : 上课人数
-classAttend : 上课班级
-classType : 课程类别
-assessmentType : 考核方式
-week : 周次
-timePoint : 节次
-address : 地点
-
-##使用注意
-
-- 只能使用 MySQL/MariaDB 数据库
-- 缓存文件夹要先创建，如果不存在将会报错
-- 每一次抓取前，都要事先清除掉缓存目录和目的数据库表
-- 目标数据库必须预先存在
-- 每次导入请先删除指定数据库中 Lessons 和 Subjects 两张表
-- 爬虫抓取页面的时间间隔建议不要低于400
+- [Hibernate EHCache – Hibernate Second Level Cache](http://www.journaldev.com/2980/hibernate-ehcache-hibernate-second-level-cache)
+- [解决spring3 mvc中乱码的问题。](http://blog.csdn.net/zhengzhb/article/details/6967975)
+- [How to configure log4j.properties for SpringJUnit4ClassRunner?](http://stackoverflow.com/questions/4570072/how-to-configure-log4j-properties-for-springjunit4classrunner)
+- [H2数据库攻略](http://www.cnblogs.com/gao241/p/3480472.html)

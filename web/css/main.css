@@ -1,0 +1,24 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    margin-top: 30px;
+}
+
+.table-schedule>tr>td{
+    text-align: center;
+}
+
+.table-schedule .item>small{
+    display: inline-block;
+}
+
+.table-schedule .item>label{
+    display: inline-block;
+}
+
+.table-schedule .item{
+    border-bottom: gray dotted 1px;
+}

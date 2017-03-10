@@ -1,4 +1,34 @@
+#
+# Idea project profiles
+#
 .idea/
 *.iml
+
+#
+# Complie target
+#
+
 target/
 out/
+
+#
+# Capture buffer directory
+#
+web/WEB-INF/captureBuffer/
+
+#
+# H2 database directory
+#
+db/
+
+#
+# Logs
+#
+
+log/
+
+#
+# login.properties stored sensitive infomation
+#
+/**/users.properties
+/**/login.properties
