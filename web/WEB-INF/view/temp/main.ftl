@@ -16,6 +16,11 @@
     <div class="row">
         <#nested >
     </div>
+    <div align="center">
+        <hr>
+        <small>本站开放源代码 : <a href="https://github.com/shinonometn/SimpleSubjectImporter/tree/master">Github</a></small><br>
+        <small>使用请遵循 GPLv2 协议</small>
+    </div>
 </div>
 <@_import_js></@_import_js>
 </body>

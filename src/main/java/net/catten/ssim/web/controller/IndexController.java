@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by cattenlinger on 2017/3/10.
@@ -58,7 +59,23 @@ public class IndexController {
         List<Lesson> lessons = lessonServices.querySchedule(termName, className, week, ignoreTypes);
         if(lessons == null || lessons.size() == 0) return "nodata";
 
-        model.addAttribute("schedule",lessons);
+        Queue<Lesson> sortedLessons = new LinkedList<>(lessons.parallelStream().sorted(
+                Comparator.comparing(Lesson::getWeekday)
+                        .thenComparing(Comparator.comparing(Lesson::getTurn)))
+                .collect(Collectors.toList()));
+
+//        List<Lesson>[][] lessonMap = new List[7][8];
+//        for(Lesson lesson : lessons){
+//            List<Lesson> turnLessons = lessonMap[lesson.getWeekday()][lesson.getTurn()];
+//            if(turnLessons == null) {
+//                lessonMap[lesson.getWeekday()][lesson.getTurn()] = new LinkedList<>();
+//                turnLessons = lessonMap[lesson.getWeekday()][lesson.getTurn()];
+//            }
+//
+//            turnLessons.add(lesson);
+//        }
+
+        model.addAttribute("schedule",sortedLessons);
         model.addAttribute("week",week);
         model.addAttribute("class",className);
 
