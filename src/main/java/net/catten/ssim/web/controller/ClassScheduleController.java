@@ -46,7 +46,7 @@ public class ClassScheduleController {
     @RequestMapping("/lessons")
     public Model lessons(
             @RequestParam("termName") String termName,
-            @RequestParam(value = "week", required = false) Integer week,
+            @RequestParam("week") Integer week,
             @RequestParam("className") String className,
             @RequestParam(value = "ignoreType", required = false) List<String> ignoreTypes,
             Model model) {

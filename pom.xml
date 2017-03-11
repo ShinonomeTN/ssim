@@ -218,7 +218,7 @@
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                     <webAppSourceDirectory>web</webAppSourceDirectory>
                     <webApp>
-                        <compactPath>/cs</compactPath>
+                        <compactPath>/</compactPath>
                     </webApp>
                     <jvmArgs>
                         org.eclipse.jetty.util.URI.charset=UTF-8
