@@ -1,5 +1,5 @@
 <#import "temp/main.ftl" as temp>
-<@temp.body title="${term}">
+<@temp.body title="${term!'未知'}">
 <div class="col-md-6 col-md-offset-3">
     <div class="panel panel-primary swing animated">
         <div align="center" class="panel-body">
