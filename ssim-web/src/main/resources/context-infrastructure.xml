@@ -20,6 +20,7 @@
         <property name="minIdle" value="1" />
         <property name="maxActive" value="20" />
 
+        <property name="filters" value="stat"/>
     </bean>
 
     <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" name="entityManagerFactory">
@@ -38,4 +39,17 @@
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="druid-stat-interceptor"
+          class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+    </bean>
+    <bean id="druid-type-proxyCreator" class="com.alibaba.druid.support.spring.stat.BeanTypeAutoProxyCreator">
+        <!-- 所有ABCInterface的派生类被拦截监控  -->
+        <property name="targetBeanType" value="cn.lncsa.ssim.web.repositories.LessonDAO" />
+        <property name="interceptorNames">
+            <list>
+                <value>druid-stat-interceptor</value>
+            </list>
+        </property>
+    </bean>
 </beans>

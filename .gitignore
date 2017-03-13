@@ -30,5 +30,4 @@ log/
 #
 # login.properties stored sensitive infomation
 #
-/**/users.properties
 /**/login.properties
