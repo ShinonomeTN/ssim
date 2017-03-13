@@ -24,8 +24,8 @@ db/
 #
 # Logs
 #
-
 log/
+/*/log
 
 #
 # login.properties stored sensitive infomation
