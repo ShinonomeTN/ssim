@@ -27,6 +27,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         if(token == null || token.equals("") || userServices.isTokenExpired(token)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
+
         }else return true;
     }
 

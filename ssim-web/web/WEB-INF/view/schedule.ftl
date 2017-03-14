@@ -1,6 +1,7 @@
 <#import "temp/main.ftl" as temp>
 <@temp.body title="${className} 在第 ${week} 周的课程 - ${term}">
 <div class="col-md-12">
+    <#assign weekdaysZh =["日","一","二","三","四","五","六"] />
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="fadeInDown animated">
@@ -14,7 +15,7 @@
         </div>
         <table class="table table-striped table-condensed table-schedule hidden-xs hidden-sm">
             <thead align="center">
-                <#list ["#","日","一","二","三","四","五","六"] as days>
+                <#list ["#"]+weekdaysZh as days>
                 <td width="2.5%">${days}</td>
                 </#list>
             </thead>
@@ -23,24 +24,50 @@
                     <td>${turns}</td>
                     <#list 0..6 as day>
                         <td>
-                            <#list schedule as lesson>
-                                <#if lesson.weekday == day && lesson.turn == turns>
-                                <div class="item">
-                                ${lesson.name} <label class="label label-default">${lesson.category}</label><small> at ${lesson.address}</small><br>
-                                </div>
-                                </#if>
-                            </#list>
+                            <#assign pos="${day}-${turns}">
+                            <#if schedule[pos]??>
+                                <#list schedule[pos] as lesson>
+                                    <div class="item <#if lesson?is_last>item_latest</#if>">
+                                    ${lesson.name} <label class="label label-default">${lesson.category}</label>
+                                        <small> at ${lesson.address}</small>
+                                        <br>
+                                    </div>
+                                </#list>
+                            </#if>
                         </td>
                     </#list>
                 </tr>
             </#list>
         </table>
-        <#assign weekdaysZh =["日","一","二","三","四","五","六"] />
-        <ul class="list-group hidden-md hidden-lg fadeIn animated">
-            <#list schedule as lessons>
+        <ul class="list-group hidden-md hidden-lg fadeIn animated list-schedule">
+            <#list 0..6 as day>
                 <li class="list-group-item">
-                    <div>周${weekdaysZh[lessons.weekday]} 第 ${lessons.turn} 节 : ${lessons.name}</div>
-                    <p> at ${lessons.address} <label class="label label-info">${lessons.category}</label></p>
+                    <div class="media">
+                        <h3 class="media-left">周 ${weekdaysZh[day]} </h3>
+                        <div class="media-body">
+                            <#assign lessonCount=0>
+                            <#list 1..8 as turns>
+                                <#assign pos="${day}-${turns}">
+                                <#if schedule[pos]??>
+                                    <div class="media">
+                                        <h4 class="media-left">${turns}</h4>
+                                        <div class="media-body">
+                                            <#list schedule[pos] as lesson>
+                                                <#assign lessonCount++>
+                                                <div class="item <#if lesson?is_last>item_latest</#if>">
+                                                    <div>
+                                                    ${lesson.name}
+                                                        <label class="label label-info">${lesson.category}</label>
+                                                    </div>
+                                                    <small>at ${lesson.address}</small>
+                                                </div>
+                                            </#list>
+                                        </div>
+                                    </div>
+                                </#if>
+                            </#list>
+                        </div>
+                    </div>
                 </li>
             </#list>
         </ul>

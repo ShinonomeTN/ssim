@@ -30,21 +30,38 @@ import java.util.stream.Collectors;
  * Created by catten on 11/17/16.
  */
 public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
-    private Properties loginProperties;
-    private Properties stringProperties;
-    private int delayMS;
-
     private Logger logger = LoggerFactory.getLogger(KingoJWCaterpillar.class);
 
-    private HttpSessionHolder httpSessionHolder = new HttpSessionHolderImpl();
+    /*
+    *
+    * Form options.
+    *
+    * */
+    public final static String FORM_OPTION_TERM = "Sel_XNXQ";
+    public final static String FORM_OPTION_LESSON = "Sel_KC";
+    public final static String FORM_OPTION_CAPTCHA = "txt_yzm";
+    public final static String FORM_OPTION_FORMAT = "gs";
 
+    /*
+    *
+    * Caterpillar properties
+    *
+    * */
+    private Properties loginProperties;
+    private Properties stringProperties;
+
+    /*
+    *
+    * Settings
+    *
+    * */
+    private int delayMS;
+    private Map<String,NameValuePair> reqForm;
+
+    private HttpSessionHolder httpSessionHolder;
     private TickEventReceiver tickEventReceiver = message -> {
         logger.info("Working : " + message[0] + "/" + message[1] + " - " + message[2]);
     };
-
-//    public KingoJWCaterpillar(Properties loginProperties) throws IOException {
-//        init(loginProperties);
-//    }
 
     public KingoJWCaterpillar() {
         logger.info("Using default tick receiver : logger ");
@@ -73,16 +90,24 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
         this.stringProperties = new Properties();
         this.loginProperties = loginProperties;
 
+         httpSessionHolder = new HttpSessionHolderImpl();
+
+        // Load api properties from resource file
         stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/cn/lncsa/kingo/jw/cs/caterpillar/strings.properties"));
         logger.info("Properties Loaded.");
 
+        // Prepare options
         setUserAgent(loginProperties.getProperty("userAgent"));
         logger.info("Using User-Agent : " + getUserAgent());
         setCharset(loginProperties.getProperty("charset"));
         logger.info("Using encoding : " + getCharset());
-
         delayMS = Integer.parseInt(loginProperties.getProperty("delay"));
         logger.info("Page capture delay : " + String.valueOf(delayMS) + " ms.");
+        reqForm = new HashMap<>();
+        reqForm.put(FORM_OPTION_FORMAT,new BasicNameValuePair(FORM_OPTION_FORMAT, loginProperties.getProperty("tableFormat")));
+        reqForm.put(FORM_OPTION_CAPTCHA,new BasicNameValuePair(FORM_OPTION_CAPTCHA, ""));
+        logger.info("Query options prepared.");
+
     }
 
     /**
@@ -184,60 +209,51 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     @Override
     public int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException {
 
-        if(!outputFolder.exists() || !outputFolder.mkdir()){
-            logger.error("Can't make output directory : " + outputFolder.getAbsolutePath());
+        if (!(isLoginExpire() || initializeSession())){
+            logger.error("Try login failed. Please check if username and password are correct, or target website UI doesn't changed.");
             return -1;
         }
-
-        if (!outputFolder.isDirectory()) {
-            logger.error("specified path is not a directory : " + outputFolder.getAbsolutePath());
-            return -1;
-        }
-
-        File[] files = outputFolder.listFiles();
-        if (files != null && files.length > 0) {
-            logger.info("Cleaning old files...");
-            for (File file : files) {
-                Files.delete(file.toPath());
-            }
-            logger.info("Cleaning finished.");
-        }
-
-        if (isLoginExpire()) initializeSession();
         logger.info("checking login status finished");
 
-        String referPage = stringProperties.getProperty("classInfoQueryPage");
-        String targetPage = stringProperties.getProperty("subjectQueryPage");
-
-
-        LinkedList<NameValuePair> nameValuePairs = new LinkedList<>();
-        nameValuePairs.add(new BasicNameValuePair("Sel_XNXQ", termCode));
-        nameValuePairs.add(new BasicNameValuePair("gs", loginProperties.getProperty("tableFormat")));
-        nameValuePairs.add(new BasicNameValuePair("txt_yzm", ""));
-        nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", ""));
-
-        logger.info("Capturing subject data...");
+        logger.info("Capturing subject list...");
         Map<String, String> lessonListOfTheTerm = getCoursesFromRemote(termCode);
+
+        logger.info("total item count - " + lessonListOfTheTerm.keySet().size());
         int total = lessonListOfTheTerm.size();
         int current = 0;
-        logger.info("total item count - " + lessonListOfTheTerm.keySet().size());
         for (String key : lessonListOfTheTerm.keySet()) {
             current++;
-            nameValuePairs.removeLast();
-            nameValuePairs.addLast(new BasicNameValuePair("Sel_KC", key));
-
-            File file = new File(outputFolder, key + ".html");
-            FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(file, "UTF-8");
-            fileWriter.write(httpSessionHolder.post(targetPage, referPage, new UrlEncodedFormEntity(nameValuePairs)).toString());
-            fileWriter.flush();
-            fileWriter.close();
-
+            captureSingleSubject(termCode,key,outputFolder);
             tickEventReceiver.tick(total, current, key);
             Thread.sleep(delayMS);
         }
+
         System.out.println();
         logger.info("Capture finished.");
         return current;
+    }
+
+    /**
+     *
+     * Capture single subject
+     *
+     * @param termCode
+     * @param subjectCode
+     * @param outputFolder
+     * @throws IOException
+     */
+    @Override
+    public void captureSingleSubject(String termCode, String subjectCode, File outputFolder) throws IOException{
+        String referPage = stringProperties.getProperty("classInfoQueryPage");
+        String targetPage = stringProperties.getProperty("subjectQueryPage");
+
+        reqForm.put(FORM_OPTION_TERM,new BasicNameValuePair(FORM_OPTION_TERM,termCode));
+        reqForm.put(FORM_OPTION_LESSON,new BasicNameValuePair("Sel_KC", subjectCode));
+        File file = new File(outputFolder, subjectCode + ".html");
+        FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(file, "UTF-8");
+        fileWriter.write(httpSessionHolder.post(targetPage, referPage, new UrlEncodedFormEntity(reqForm.values())).toString());
+        fileWriter.flush();
+        fileWriter.close();
     }
 
     /**

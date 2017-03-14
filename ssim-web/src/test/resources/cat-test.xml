@@ -53,7 +53,7 @@
         </property>
 
         <property name="factory">
-            <bean class="cn.lncsa.kingo.jw.cs.caterpillar.impl.CourseFactoryImpl"/>
+            <bean class="cn.lncsa.kingo.jw.cs.caterpillar.impl.KingoToTimePointCourseFactory"/>
         </property>
 
         <property name="expander">

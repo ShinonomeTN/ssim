@@ -1,6 +1,7 @@
 package cn.lncsa.ssim.web.controller;
 
 import cn.lncsa.ssim.web.services.CoursesUpdateServices;
+import cn.lncsa.ssim.web.services.util.CaptureThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +31,18 @@ public class ManageController {
 
     @RequestMapping("/task/fire")
     public Model startTask(@RequestParam("code") String taskCode, Model model){
-        coursesUpdateServices.setTaskCode(taskCode);
-        coursesUpdateServices.fireCaptureThread(false);
+
+        switch (coursesUpdateServices.getStatus()){
+            case CaptureThread.STATUS_ERROR:
+            case CaptureThread.STATUS_READY:
+            case CaptureThread.STATUS_STOPPED:
+                coursesUpdateServices.setTaskCode(taskCode);
+                coursesUpdateServices.fireCaptureThread(false);
+                break;
+
+            default:
+                break;
+        }
 
         model.addAttribute("status",coursesUpdateServices.getStatus());
         model.addAttribute("task",coursesUpdateServices.getTaskStatus());
@@ -40,7 +51,17 @@ public class ManageController {
 
     @RequestMapping("/task/import")
     public Model startImport(Model model){
-        coursesUpdateServices.fireCaptureThread(true);
+        switch (coursesUpdateServices.getStatus()){
+            case CaptureThread.STATUS_ERROR:
+            case CaptureThread.STATUS_READY:
+            case CaptureThread.STATUS_STOPPED:
+                coursesUpdateServices.fireCaptureThread(true);
+                break;
+
+            default:
+                break;
+        }
+
         model.addAttribute("status",coursesUpdateServices.getStatus());
         model.addAttribute("task",coursesUpdateServices.getTaskStatus());
         return model;
@@ -48,7 +69,15 @@ public class ManageController {
 
     @RequestMapping("/task/terminate")
     public Model stopTask(Model model){
-        coursesUpdateServices.terminateCaptureThread();
+        switch (coursesUpdateServices.getStatus()){
+            case CaptureThread.STATUS_IMPORTING:
+            case CaptureThread.STATUS_CAPTURING:
+                coursesUpdateServices.terminateCaptureThread();
+                break;
+
+            default:
+                break;
+        }
         model.addAttribute("status",coursesUpdateServices.getStatus());
         model.addAttribute("task",coursesUpdateServices.getTaskStatus());
         return model;

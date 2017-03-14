@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Created by catten on 3/4/17.
@@ -42,52 +44,100 @@ public class CaptureThread implements Runnable {
 
     @Override
     public void run() {
+        File outDir = new File(bufferPath);
+        if(!prepare(outDir)){
+            logger.error("Capture could not start, please check if buffer path exist and is a directory!");
+            status = STATUS_ERROR;
+            return;
+        }
+
+        try {
+            logger.info("Output files to directory " + outDir.getAbsolutePath());
+
+            if ((taskCode != null && !taskCode.equals("")) || skipCapture) {
+                if (!skipCapture) if (!capture(outDir)) status = STATUS_ERROR;
+                if (!load(outDir)) status = STATUS_ERROR;
+                else status = STATUS_READY;
+
+            } else {
+
+                logger.error("Task not available.");
+                status = STATUS_ERROR;
+            }
+        } catch (IOException e) {
+
+            logger.error("An error occur, task interrupted.", e);
+            status = STATUS_ERROR;
+        } catch (InterruptedException e) {
+
+            logger.error("Task interrupted.", e);
+            status = STATUS_STOPPED;
+        }
+    }
+
+    private boolean prepare(File file){
         //Provide a default ticker, output status to log.
         if (this.receiver == null) {
             logger.warn("No tick receiver, using default receiver!");
             this.receiver = message -> logger.info("Work status : " + message[1] + "/" + message[0] + " - " + message[2]);
         }
 
-        File file = new File(bufferPath);
-        if (file.exists() && file.isDirectory()) {
-            logger.info("Directory : " + file.getAbsolutePath());
-
-            try {
-                if ((taskCode != null && !taskCode.equals("")) || skipCapture) {
-                    status = STATUS_CAPTURING;
-                    if (!skipCapture) {
-                        logger.info("Start capturing from website.");
-                        caterpillar.getTermSubjectToFiles(taskCode, file);
-                        logger.info("Capture finished");
-                    }
-                    status = STATUS_IMPORTING;
-                    File[] files = file.listFiles();
-                    if (files != null) {
-                        logger.info("Start importing task.");
-                        int count = 0;
-                        for (File f : files) {
-                            dao.save(expander.expand(factory.parse(f)));
-                            count++;
-                            receiver.tick(count, files.length, f.getName());
-                        }
-                        logger.info("Importing finished.");
-                    }
-                    status = STATUS_READY;
-                } else {
-                    logger.error("Task not available.");
-                    status = STATUS_ERROR;
-                }
-            } catch (IOException e) {
-                logger.error("An error occur, task interrupted.", e);
-                status = STATUS_ERROR;
-            } catch (InterruptedException e) {
-                logger.error("Task interrupted.", e);
-                status = STATUS_STOPPED;
+        //If output directory doesn't exist, create.
+        if(!file.exists()){
+            //If could not create directory, report and stop importing.
+            if(!file.mkdir()) {
+                logger.error("Could not create directory : " + file.getAbsolutePath());
+                return false;
             }
-        } else {
-            logger.error("Capture could not start, please check if buffer path exist and is a directory!");
-            status = STATUS_ERROR;
+        } else if (!file.isDirectory()) {
+            //Check if target is a directory.
+            logger.error("Specified path isn't to a directory : " + file.getAbsolutePath());
+            return false;
         }
+
+        //Clear target directory
+        File[] oldFiles = file.listFiles();
+        if (oldFiles != null && oldFiles.length > 0) {
+            logger.info("Cleaning old files...");
+            for (File file1 : oldFiles) {
+                try {
+                    Files.delete(file1.toPath());
+                } catch (IOException e) {
+                    logger.error(file1.getAbsolutePath() + " could not be deleted.", e);
+                    return false;
+                }
+            }
+            logger.info("Cleaning finished.");
+        }
+
+        return true;
+    }
+
+    private boolean capture(File file) throws IOException, InterruptedException {
+        status = STATUS_CAPTURING;
+        logger.info("Start capturing from website.");
+        if(caterpillar.getTermSubjectToFiles(taskCode, file) < 0) {
+            logger.error("Error...");
+            return false;
+        } else logger.info("Capturing finished");
+
+        return true;
+    }
+
+    private boolean load(File file) throws IOException {
+        File[] files = file.listFiles();
+        if (files != null) {
+            status = STATUS_IMPORTING;
+            logger.info("Start importing task.");
+            int count = 0;
+            for (File f : files) {
+                dao.save(expander.expand(factory.parse(f)));
+                count++;
+                receiver.tick(count, files.length, f.getName());
+            }
+            logger.info("Importing finished.");
+        }
+        return true;
     }
 
     /*

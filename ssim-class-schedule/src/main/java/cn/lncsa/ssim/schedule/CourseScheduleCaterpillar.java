@@ -17,6 +17,8 @@ public interface CourseScheduleCaterpillar extends TickEventProvider {
 
     int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException;
 
+    void captureSingleSubject(String termCode, String subjectCode, File outputFolder) throws IOException;
+
     boolean isLoginExpire() throws IOException;
 
     String getUserAgent();
