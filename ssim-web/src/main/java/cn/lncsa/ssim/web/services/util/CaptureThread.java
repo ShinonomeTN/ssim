@@ -57,8 +57,10 @@ public class CaptureThread implements Runnable {
                     status = STATUS_CAPTURING;
                     if (!skipCapture) {
                         logger.info("Start capturing from website.");
-                        caterpillar.getTermSubjectToFiles(taskCode, file);
-                        logger.info("Capture finished");
+                        if(caterpillar.getTermSubjectToFiles(taskCode, file) < 0) {
+                            logger.error("Capture Error.");
+                            return;
+                        } else logger.info("Capture finished");
                     }
                     status = STATUS_IMPORTING;
                     File[] files = file.listFiles();

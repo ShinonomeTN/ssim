@@ -3,8 +3,12 @@
 <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <#if (terms?? && terms?size > 0) >
         <div class="panel panel-primary fadeInDown animated">
-            <div class="panel-heading">
-                <h2>请选择学期</h2>
+            <div align="center" class="panel-heading">
+                <#if busy??>
+                    <@temp.siteBusyTitle status=busy/>
+                <#else >
+                    <h2>请选择学期</h2>
+                </#if>
             </div>
             <div class="list-group">
                 <#list terms as term>
@@ -22,5 +26,8 @@
             </div>
         </div>
     </#if>
+    <div align="center" class="container-fluid">
+
+    </div>
 </div>
 </@temp.body>

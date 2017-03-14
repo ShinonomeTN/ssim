@@ -184,9 +184,11 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     @Override
     public int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException {
 
-        if(!outputFolder.exists() || !outputFolder.mkdir()){
-            logger.error("Can't make output directory : " + outputFolder.getAbsolutePath());
-            return -1;
+        if(!outputFolder.exists()){
+            if(!outputFolder.mkdir()) {
+                logger.error("Can't make output directory : " + outputFolder.getAbsolutePath());
+                return -1;
+            }
         }
 
         if (!outputFolder.isDirectory()) {
