@@ -31,3 +31,4 @@ log/
 # login.properties stored sensitive infomation
 #
 /**/login.properties
+/ssim-web/src/main/resources/rebel.xml

@@ -49,3 +49,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="/cs/js/bootstrap-select.min.js"></script>
 </#macro>
+
+<#macro siteBusyTitle status>
+    <#if status == "capturing">
+    <h2> <span class="glyphicon glyphicon-refresh"></span> 网站正在更新数据</h2>
+    <p>建议稍后来访（一般10分钟左右）</p>
+    <#elseif status == "importing">
+    <h2> <span class="glyphicon glyphicon-hourglass"></span> 网站正在更新数据</h2>
+    <p>此时网站压力较大，建议稍后来访（一般 5 分钟左右）</p>
+    </#if>
+</#macro>

@@ -1,7 +1,10 @@
 package cn.lncsa.ssim.web.controller;
 
 import cn.lncsa.ssim.web.model.Lesson;
+import cn.lncsa.ssim.web.services.CoursesUpdateServices;
 import cn.lncsa.ssim.web.services.LessonServices;
+import cn.lncsa.ssim.web.services.util.CaptureThread;
+import cn.lncsa.ssim.web.services.util.TickModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,28 +24,43 @@ import java.util.stream.Collectors;
 public class IndexController {
 
     private LessonServices lessonServices;
+    private CoursesUpdateServices coursesUpdateServices;
 
     @Autowired
     public void setLessonServices(LessonServices lessonServices) {
         this.lessonServices = lessonServices;
     }
 
+    @Autowired
+    public void setCoursesUpdateServices(CoursesUpdateServices coursesUpdateServices) {
+        this.coursesUpdateServices = coursesUpdateServices;
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-    public String index(Model model){
-        model.addAttribute("terms",lessonServices.querySchoolTerms());
+    public String index(Model model) {
+        model.addAttribute("terms", lessonServices.querySchoolTerms());
+        switch (coursesUpdateServices.getStatus()) {
+            case CaptureThread.STATUS_CAPTURING:
+            case CaptureThread.STATUS_IMPORTING:
+                model.addAttribute("busy", coursesUpdateServices.getStatus());
+                break;
+
+            default:
+                break;
+        }
         return "index";
     }
 
-    @RequestMapping(value = "/terms/{termName}",method = RequestMethod.GET)
-    public String termInfo(@PathVariable("termName") String termName, Model model){
+    @RequestMapping(value = "/terms/{termName}", method = RequestMethod.GET)
+    public String termInfo(@PathVariable("termName") String termName, Model model) {
 
-        model.addAttribute("term",termName);
+        model.addAttribute("term", termName);
         Integer weekCount = lessonServices.queryWeeks(termName);
-        if(weekCount == null) return "nodata";
-        model.addAttribute("weeks",weekCount);
+        if (weekCount == null) return "nodata";
+        model.addAttribute("weeks", weekCount);
 
-        model.addAttribute("classes",lessonServices.listClassesInTerm(termName));
-        model.addAttribute("categories",lessonServices.listClassTypes());
+        model.addAttribute("classes", lessonServices.listClassesInTerm(termName));
+        model.addAttribute("categories", lessonServices.listClassTypes());
         return "term";
     }
 
@@ -51,14 +69,14 @@ public class IndexController {
             @RequestParam("termName") String termName,
             @RequestParam("week") Integer week,
             @RequestParam("class") String className,
-            @RequestParam(value = "ignoreType",required = false) List<String> ignoreTypes,
-            Model model){
+            @RequestParam(value = "ignoreType", required = false) List<String> ignoreTypes,
+            Model model) {
 
-        model.addAttribute("term",termName);
+        model.addAttribute("term", termName);
 
-        if(week == null) return "nodata";
+        if (week == null) return "nodata";
         List<Lesson> lessons = lessonServices.querySchedule(termName, className, week, ignoreTypes);
-        if(lessons == null || lessons.size() == 0) return "nodata";
+        if (lessons == null || lessons.size() == 0) return "nodata";
 
         Queue<Lesson> sortedLessons = new LinkedList<>(lessons.parallelStream().sorted(
                 Comparator.comparing(Lesson::getWeekday)
@@ -76,9 +94,9 @@ public class IndexController {
 //            turnLessons.add(lesson);
 //        }
 
-        model.addAttribute("schedule",sortedLessons);
-        model.addAttribute("week",week);
-        model.addAttribute("className",className);
+        model.addAttribute("schedule", sortedLessons);
+        model.addAttribute("week", week);
+        model.addAttribute("className", className);
 
         return "schedule";
     }
