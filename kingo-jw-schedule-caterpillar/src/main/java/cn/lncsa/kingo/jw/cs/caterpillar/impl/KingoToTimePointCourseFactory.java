@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Created by catten on 11/12/16.
  */
-public class CourseFactoryImpl implements CourseFactory<KingoRawCourse> {
+public class KingoToTimePointCourseFactory implements CourseFactory<KingoRawCourse> {
 
     private String baseUrl = "";
     private String charset = "UTF-8";
@@ -24,7 +24,7 @@ public class CourseFactoryImpl implements CourseFactory<KingoRawCourse> {
     /**
      * Default constructor
      */
-    public CourseFactoryImpl(){
+    public KingoToTimePointCourseFactory(){
     }
 
     /**
@@ -32,7 +32,7 @@ public class CourseFactoryImpl implements CourseFactory<KingoRawCourse> {
      *
      * @param charset
      */
-    public CourseFactoryImpl(String charset){
+    public KingoToTimePointCourseFactory(String charset){
         this.charset = charset;
     }
 

@@ -1,12 +1,3 @@
-*{
-    margin: 0;
-    padding: 0;
-}
-
-body{
-    margin-top: 30px;
-}
-
 .table-schedule>tr>td{
     text-align: center;
 }
@@ -19,6 +10,14 @@ body{
     display: inline-block;
 }
 
-.table-schedule .item{
+.table-schedule .item, .list-schedule .item{
     border-bottom: gray dotted 1px;
+}
+
+.table-schedule .item_latest, .list-schedule .item_latest{
+    border: none;
+}
+
+.list-schedule .item>*{
+    margin : 2px;
 }

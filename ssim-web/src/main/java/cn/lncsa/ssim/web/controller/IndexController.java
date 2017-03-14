@@ -78,10 +78,12 @@ public class IndexController {
         List<Lesson> lessons = lessonServices.querySchedule(termName, className, week, ignoreTypes);
         if (lessons == null || lessons.size() == 0) return "nodata";
 
-        Queue<Lesson> sortedLessons = new LinkedList<>(lessons.parallelStream().sorted(
-                Comparator.comparing(Lesson::getWeekday)
-                        .thenComparing(Comparator.comparing(Lesson::getTurn)))
-                .collect(Collectors.toList()));
+        Map<String,List<Lesson>> lessonPositions = new HashMap<>();
+        for (Lesson lesson : lessons){
+            String pos = lesson.getWeekday().toString() + "-" + lesson.getTurn().toString();
+            List<Lesson> posLesson = lessonPositions.computeIfAbsent(pos, k -> new ArrayList<>());
+            posLesson.add(lesson);
+        }
 
 //        List<Lesson>[][] lessonMap = new List[7][8];
 //        for(Lesson lesson : lessons){
@@ -94,7 +96,7 @@ public class IndexController {
 //            turnLessons.add(lesson);
 //        }
 
-        model.addAttribute("schedule", sortedLessons);
+        model.addAttribute("schedule", lessonPositions);
         model.addAttribute("week", week);
         model.addAttribute("className", className);
 

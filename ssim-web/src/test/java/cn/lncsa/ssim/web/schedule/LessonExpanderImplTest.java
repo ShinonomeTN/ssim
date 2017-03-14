@@ -1,6 +1,6 @@
 package cn.lncsa.ssim.web.schedule;
 
-import cn.lncsa.kingo.jw.cs.caterpillar.impl.CourseFactoryImpl;
+import cn.lncsa.kingo.jw.cs.caterpillar.impl.KingoToTimePointCourseFactory;
 import cn.lncsa.kingo.jw.cs.caterpillar.model.KingoRawCourse;
 import cn.lncsa.ssim.schedule.factory.LessonExpander;
 import cn.lncsa.ssim.web.model.Lesson;
@@ -23,7 +23,7 @@ public class LessonExpanderImplTest {
     public void expand() throws Exception {
         for (String testCast : testCaseFiles) {
             InputStream inputStream = this.getClass().getResourceAsStream("/" + testCast + ".html");
-            CourseFactoryImpl reader = new CourseFactoryImpl();
+            KingoToTimePointCourseFactory reader = new KingoToTimePointCourseFactory();
             reader.setCharset("GBK");
             KingoRawCourse rawTable = reader.parse(inputStream, Integer.parseInt(testCast));
             LessonExpander<KingoRawCourse,Lesson> expander = new LessonExpanderImpl();
