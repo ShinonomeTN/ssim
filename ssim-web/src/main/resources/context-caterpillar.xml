@@ -25,7 +25,7 @@
 
         <property name="receiver" ref="tickReceiver"/>
 
-        <property name="bufferPath" value="D:/captureBuffer"/>
+        <property name="bufferPath" value="/tmp/ssim/captureBuffer"/>
     </bean>
 
 </beans>

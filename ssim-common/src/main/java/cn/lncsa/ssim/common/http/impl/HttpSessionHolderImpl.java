@@ -4,6 +4,7 @@ import cn.lncsa.ssim.common.http.HttpSessionHolder;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,6 +32,7 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
     private String charset = "UTF-8";
 
     private HttpClient httpClient;
+    private RequestConfig defaultRequestConfig;
 
     private HttpContext websiteContext;
     private CookieStore cookieStore;
@@ -45,13 +47,20 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
 
         httpClient = HttpClients
                 .custom()
-                .setRetryHandler((e, i, httpContext) -> i <= 5 && e instanceof NoHttpResponseException)
+                .setRetryHandler((e, i, httpContext) -> i <= 5)
+                .build();
+
+        defaultRequestConfig = RequestConfig
+                .custom()
+                .setConnectionRequestTimeout(10000)
+                .setSocketTimeout(15000)
                 .build();
     }
 
     @Override
     public Document post(String target, String refer, UrlEncodedFormEntity formEntity) throws IOException {
         HttpPost request = new HttpPost(target);
+        request.setConfig(defaultRequestConfig);
         request.setHeader("Referer", refer);
         request.setHeader("User-Agent", userAgent);
         request.setEntity(formEntity);
@@ -64,6 +73,7 @@ public class HttpSessionHolderImpl implements HttpSessionHolder {
     @Override
     public Document get(String target, String refer) throws IOException {
         HttpGet request = new HttpGet(target);
+        request.setConfig(defaultRequestConfig);
         request.setHeader("Referer", refer);
         request.setHeader("User-Agent", userAgent);
         CloseableHttpResponse response = (CloseableHttpResponse) httpClient.execute(request, websiteContext);

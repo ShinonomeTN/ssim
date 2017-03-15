@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 /**
  * Created by catten on 3/4/17.
@@ -95,19 +95,23 @@ public class CaptureThread implements Runnable {
             return false;
         }
 
-        //Clear target directory
-        File[] oldFiles = file.listFiles();
-        if (oldFiles != null && oldFiles.length > 0) {
-            logger.info("Cleaning old files...");
-            for (File file1 : oldFiles) {
-                try {
-                    Files.delete(file1.toPath());
-                } catch (IOException e) {
-                    logger.error(file1.getAbsolutePath() + " could not be deleted.", e);
-                    return false;
+        if(!skipCapture){
+            //Clear target directory
+            File[] oldFiles = file.listFiles();
+            if (oldFiles != null && oldFiles.length > 0) {
+                logger.info("Cleaning old files...");
+                for (File file1 : oldFiles) {
+                    try {
+                        Files.delete(file1.toPath());
+                    } catch (IOException e) {
+                        logger.error(file1.getAbsolutePath() + " could not be deleted.", e);
+                        return false;
+                    }
                 }
+                logger.info("Cleaning finished.");
             }
-            logger.info("Cleaning finished.");
+        }else{
+            logger.info("Import exist files.");
         }
 
         return true;
@@ -131,7 +135,9 @@ public class CaptureThread implements Runnable {
             logger.info("Start importing task.");
             int count = 0;
             for (File f : files) {
-                dao.save(expander.expand(factory.parse(f)));
+                dao.save(
+                        expander.expand(
+                                factory.parse(f)));
                 count++;
                 receiver.tick(count, files.length, f.getName());
             }

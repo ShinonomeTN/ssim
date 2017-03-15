@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -93,7 +94,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
          httpSessionHolder = new HttpSessionHolderImpl();
 
         // Load api properties from resource file
-        stringProperties.load(KingoJWCaterpillar.class.getResourceAsStream("/cn/lncsa/kingo/jw/cs/caterpillar/strings.properties"));
+        stringProperties.load(new InputStreamReader(KingoJWCaterpillar.class.getResourceAsStream("/cn/lncsa/kingo/jw/cs/caterpillar/strings.properties"),"UTF-8"));
         logger.info("Properties Loaded.");
 
         // Prepare options
@@ -134,7 +135,8 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
         resultPage = httpSessionHolder.post(loginPageAddress, loginPageAddress, prepareLoginData(theForm));
 
         Element element = resultPage.getElementById("divLogNote").child(0);
-        if (!element.text().equals(stringProperties.getProperty("loginSuccessTip"))) {
+        String reg = stringProperties.getProperty("loginSuccessTip");
+        if (!element.text().matches(reg)) {
             logger.warn("Login result : " + element.text());
             return false;
         }
@@ -209,10 +211,11 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
     @Override
     public int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException {
 
-        if (!(isLoginExpire() || initializeSession())){
+        if (isLoginExpire())if (!initializeSession()){
             logger.error("Try login failed. Please check if username and password are correct, or target website UI doesn't changed.");
             return -1;
         }
+
         logger.info("checking login status finished");
 
         logger.info("Capturing subject list...");

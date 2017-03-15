@@ -11,8 +11,10 @@ public class KingoRawTimePointTest {
 
     @Test
     public void expand() throws Exception {
-        KingoRawTimePoint timePoint = new KingoRawTimePoint("1-2","一[1-4]节");
-        System.out.println(timePoint.expand());
+        KingoRawTimePoint timePoint = new KingoRawTimePoint("2,8","一[1-4节]双");
+        for (TimePoint timePoint1 : timePoint.expand()){
+            System.out.println(timePoint1);
+        }
     }
 
 }

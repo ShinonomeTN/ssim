@@ -31,14 +31,15 @@ public class CaptureThreadTest {
 
     @Test
     public void run() throws Exception {
-        String[] terms = new String[]{"20140", "20141", "20150", "20151", "20160", "20161"};
+        //String[] terms = new String[]{"20140", "20141", "20150", "20151", "20160", "20161"};
+        String[] terms = new String[]{"20140"};
         System.out.println("Current path : " + new File("").getAbsolutePath());
         captureThread.setDao(lessonDAO);
 
-//        captureThread.setTaskCode("20161");
-//        //captureThread.setSkipCapture(true);
-//        captureThread.setDao(lessonDAO);
-//        captureThread.run();
+        captureThread.setTaskCode("20161");
+        //captureThread.setSkipCapture(true);
+        captureThread.setDao(lessonDAO);
+        captureThread.run();
 
 //        for (String term : terms){
 //            captureThread.setTaskCode(term);

@@ -30,7 +30,7 @@ public class KingoRawTimePoint {
 
     public KingoRawTimePoint(String weekRange, String timePoints) {
         this.weekRange = weekRange;
-        this.timePoints = timePoints;
+        setTimePoints(timePoints);
     }
 
     public String getWeekRange() {
@@ -78,8 +78,10 @@ public class KingoRawTimePoint {
                 switch (strings[2]) {
                     case "双":
                         if (week % 2 != 0) continue;
+                        break;
                     case "单":
                         if (week % 2 == 0) continue;
+                        break;
                     default:
                         break;
                 }
