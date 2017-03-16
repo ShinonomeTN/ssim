@@ -87,12 +87,13 @@ public class IndexController {
         model.addAttribute("schedule", lessonPositions);
         model.addAttribute("week", week);
         model.addAttribute("className", className);
+        model.addAttribute("ignored",ignoreTypes);
 
         return "schedule";
     }
 
     @RequestMapping("/terms/{termName}/timepoints")
-    public String timepoint(
+    public String timePoint(
             @PathVariable("termName") String termName,
             @RequestParam("class") List<String> className,
             @RequestParam("week") List<Integer> weeks,
@@ -111,7 +112,11 @@ public class IndexController {
             mappedPoints.computeIfAbsent(key, k -> timePoint);
         }
 
-        model.addAttribute("timepoints",mappedPointsList);
+        model.addAttribute("timePoints",mappedPointsList);
+        model.addAttribute("classNames",className);
+        model.addAttribute("weeks",weeks);
+        model.addAttribute("ignored",ignoreType);
+        model.addAttribute("term",termName);
         return "timepoint";
     }
 }

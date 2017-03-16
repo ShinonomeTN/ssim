@@ -21,3 +21,7 @@
 .list-schedule .item>*{
     margin : 2px;
 }
+
+.list-timePoint .glyphicon-alert{
+    color: #999;
+}

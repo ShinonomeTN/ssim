@@ -9,6 +9,13 @@
                 <br>${className}在第${week}周的课程
             </h3>
             <div>
+                <#if (ignored?? && ignored?size > 0) >
+                    <label class="pull-left">忽略课程类型 :
+                        <#list ignored as ii>
+                            <label class="label label-default">${ii}</label>
+                        </#list>
+                    </label>
+                </#if>
                 <a class="btn btn-primary btn-sm pull-right" href="/cs/terms/${term}">返回</a>
                 <div class="clearfix"></div>
             </div>
@@ -19,7 +26,7 @@
                 <td width="2.5%">${days}</td>
                 </#list>
             </thead>
-            <#list 1..9 as turns>
+            <#list 1..12 as turns>
                 <tr align="center">
                     <td>${turns}</td>
                     <#list 0..6 as day>
@@ -46,7 +53,7 @@
                         <h3 class="media-left">周 ${weekdaysZh[day]} </h3>
                         <div class="media-body">
                             <#assign lessonCount=0>
-                            <#list 1..9 as turns>
+                            <#list 1..12 as turns>
                                 <#assign pos="${day}-${turns}">
                                 <#if schedule[pos]??>
                                     <div class="media">
