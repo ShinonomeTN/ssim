@@ -57,8 +57,9 @@
 查询所有课程类型
 
 - 方法 ： GET
-- 无传参
-- 返回 ： 所有课程类型
+- 参数 : 
+    - termName ： 指定学期，可选，不指定则返回所有学期的类型
+- 返回 ： 课程类型
 
 ```
 {
@@ -103,6 +104,30 @@
 }
 ```
 
+####/api/lessons/timepoint
+
+- 方法 ： GET
+- 参数 ： 
+	- termName ： 指定学期
+	- week ： 周数，数组
+	- className ： 班级列表，数组
+	- ignoreType ： 忽略的课程类型，数组，可选
+- 返回 ： 指定条件的有课的时间点
+
+```
+{
+	"data":[
+		{"week":9,"day":2,"turn":7},
+		{"week":9,"day":2,"turn":8},
+		....]
+}
+
+```
+
+##其他 API
+
+管理 API 可以查阅 Controller 代码得知。这里不直接说明。
+
 ***
 ##参考
 
@@ -110,3 +135,4 @@
 - [解决spring3 mvc中乱码的问题。](http://blog.csdn.net/zhengzhb/article/details/6967975)
 - [How to configure log4j.properties for SpringJUnit4ClassRunner?](http://stackoverflow.com/questions/4570072/how-to-configure-log4j-properties-for-springjunit4classrunner)
 - [H2数据库攻略](http://www.cnblogs.com/gao241/p/3480472.html)
+- [阿里开源数据库连接池Druid一览](http://www.kailing.pub/article/index/arcid/91.html)

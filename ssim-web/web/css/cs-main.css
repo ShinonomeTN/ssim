@@ -1,0 +1,27 @@
+.table-schedule>tr>td{
+    text-align: center;
+}
+
+.table-schedule .item>small{
+    display: inline-block;
+}
+
+.table-schedule .item>label{
+    display: inline-block;
+}
+
+.table-schedule .item, .list-schedule .item{
+    border-bottom: gray dotted 1px;
+}
+
+.table-schedule .item_latest, .list-schedule .item_latest{
+    border: none;
+}
+
+.list-schedule .item>*{
+    margin : 2px;
+}
+
+.list-timePoint .glyphicon-alert{
+    color: #999;
+}

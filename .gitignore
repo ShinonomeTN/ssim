@@ -8,7 +8,7 @@
 # Complie target
 #
 
-target/
+/**/target/
 out/
 
 #
@@ -24,11 +24,11 @@ db/
 #
 # Logs
 #
-
 log/
+/*/log
 
 #
 # login.properties stored sensitive infomation
 #
-/**/users.properties
 /**/login.properties
+/ssim-web/src/main/resources/rebel.xml
