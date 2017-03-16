@@ -16,28 +16,28 @@ import java.util.List;
 @RequestMapping("/api")
 public class ClassScheduleController {
 
-    private LessonServices lessonServices;
+    private LessonServices lessonSrv;
 
     @Autowired
-    public void setLessonServices(LessonServices lessonServices) {
-        this.lessonServices = lessonServices;
+    public void setLessonSrv(LessonServices lessonSrv) {
+        this.lessonSrv = lessonSrv;
     }
 
     @RequestMapping("/terms")
     public Model terms(Model model) {
-        model.addAttribute("data", lessonServices.querySchoolTerms());
+        model.addAttribute("data", lessonSrv.querySchoolTerms());
         return model;
     }
 
     @RequestMapping("/weeks")
     public Model termWeekCount(@RequestParam("termName") String termName, Model model) {
-        model.addAttribute("data", lessonServices.queryWeeks(termName));
+        model.addAttribute("data", lessonSrv.queryWeeks(termName));
         return model;
     }
 
     @RequestMapping("/classes")
     public Model termClasses(@RequestParam("termName") String termName, Model model) {
-        model.addAttribute("data", lessonServices.listClassesInTerm(termName));
+        model.addAttribute("data", lessonSrv.listClassesInTerm(termName));
         return model;
     }
 
@@ -49,14 +49,28 @@ public class ClassScheduleController {
             @RequestParam(value = "ignoreType", required = false) List<String> ignoreTypes,
             Model model) {
 
-        model.addAttribute("data", lessonServices.querySchedule(termName, className, week, ignoreTypes));
+        model.addAttribute("data", lessonSrv.querySchedule(termName, className, week, ignoreTypes));
 
         return model;
     }
 
     @RequestMapping("/types")
-    public Model lessonTypes(Model model) {
-        model.addAttribute("data", lessonServices.listClassTypes());
+    public Model lessonTypes(@RequestParam(value = "term",required = false) String term, Model model) {
+        model.addAttribute("data", term == null ? lessonSrv.listClassTypes() : lessonSrv.listClassTypes(term));
+        return model;
+    }
+
+    @RequestMapping("/lessons/timepoint")
+    public Model timepoint(
+            @RequestParam("termName") String termName,
+            @RequestParam("className") List<String> className,
+            @RequestParam("week") List<Integer> weeks,
+            @RequestParam(value = "ignoreType",required = false) List<String> ignoreType,
+            Model model){
+
+        model.addAttribute("data",lessonSrv.getLessonTimePoint(
+                termName,className,weeks,ignoreType
+        ));
         return model;
     }
 }

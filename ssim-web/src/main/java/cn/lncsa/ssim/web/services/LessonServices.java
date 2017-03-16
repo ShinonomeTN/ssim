@@ -2,10 +2,12 @@ package cn.lncsa.ssim.web.services;
 
 import cn.lncsa.ssim.web.model.Lesson;
 import cn.lncsa.ssim.web.repositories.LessonDAO;
+import cn.lncsa.ssim.web.view.LessonTimePoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,5 +73,19 @@ public class LessonServices {
 
     public List<String> listClassTypes() {
         return lessonDAO.getTypes();
+    }
+
+    public List<String> listClassTypes(String termName){
+        return lessonDAO.getTermTypes(termName);
+    }
+
+    public List<LessonTimePoint> getLessonTimePoint(String termName, List<String> className, List<Integer> weeks, List<String> ignoreType){
+        List<Object[]> list = ignoreType.size() == 0 ?
+                lessonDAO.classTimePointList(termName,className,weeks) : lessonDAO.classTimePointList(termName,className,weeks,ignoreType);
+        List<LessonTimePoint> timePoints = new ArrayList<>();
+        for (Object[] objects : list){
+            timePoints.add(new LessonTimePoint((Integer)objects[0], (Integer)objects[1], (Integer)objects[2]));
+        }
+        return timePoints;
     }
 }

@@ -19,7 +19,7 @@
                 <td width="2.5%">${days}</td>
                 </#list>
             </thead>
-            <#list 1..8 as turns>
+            <#list 1..9 as turns>
                 <tr align="center">
                     <td>${turns}</td>
                     <#list 0..6 as day>
@@ -46,7 +46,7 @@
                         <h3 class="media-left">周 ${weekdaysZh[day]} </h3>
                         <div class="media-body">
                             <#assign lessonCount=0>
-                            <#list 1..8 as turns>
+                            <#list 1..9 as turns>
                                 <#assign pos="${day}-${turns}">
                                 <#if schedule[pos]??>
                                     <div class="media">

@@ -4,7 +4,7 @@ import cn.lncsa.ssim.web.model.Lesson;
 import cn.lncsa.ssim.web.services.CoursesUpdateServices;
 import cn.lncsa.ssim.web.services.LessonServices;
 import cn.lncsa.ssim.web.services.util.CaptureThread;
-import cn.lncsa.ssim.web.services.util.TickModel;
+import cn.lncsa.ssim.web.view.LessonTimePoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by cattenlinger on 2017/3/10.
@@ -23,12 +22,12 @@ import java.util.stream.Collectors;
 @RequestMapping("")
 public class IndexController {
 
-    private LessonServices lessonServices;
+    private LessonServices lessonSrv;
     private CoursesUpdateServices coursesUpdateServices;
 
     @Autowired
-    public void setLessonServices(LessonServices lessonServices) {
-        this.lessonServices = lessonServices;
+    public void setLessonSrv(LessonServices lessonSrv) {
+        this.lessonSrv = lessonSrv;
     }
 
     @Autowired
@@ -38,7 +37,7 @@ public class IndexController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
-        model.addAttribute("terms", lessonServices.querySchoolTerms());
+        model.addAttribute("terms", lessonSrv.querySchoolTerms());
         switch (coursesUpdateServices.getStatus()) {
             case CaptureThread.STATUS_CAPTURING:
             case CaptureThread.STATUS_IMPORTING:
@@ -55,12 +54,12 @@ public class IndexController {
     public String termInfo(@PathVariable("termName") String termName, Model model) {
 
         model.addAttribute("term", termName);
-        Integer weekCount = lessonServices.queryWeeks(termName);
+        Integer weekCount = lessonSrv.queryWeeks(termName);
         if (weekCount == null) return "nodata";
         model.addAttribute("weeks", weekCount);
 
-        model.addAttribute("classes", lessonServices.listClassesInTerm(termName));
-        model.addAttribute("categories", lessonServices.listClassTypes());
+        model.addAttribute("classes", lessonSrv.listClassesInTerm(termName));
+        model.addAttribute("categories", lessonSrv.listClassTypes(termName));
         return "term";
     }
 
@@ -75,7 +74,7 @@ public class IndexController {
         model.addAttribute("term", termName);
 
         if (week == null) return "nodata";
-        List<Lesson> lessons = lessonServices.querySchedule(termName, className, week, ignoreTypes);
+        List<Lesson> lessons = lessonSrv.querySchedule(termName, className, week, ignoreTypes);
         if (lessons == null || lessons.size() == 0) return "nodata";
 
         Map<String,List<Lesson>> lessonPositions = new HashMap<>();
@@ -85,21 +84,34 @@ public class IndexController {
             posLesson.add(lesson);
         }
 
-//        List<Lesson>[][] lessonMap = new List[7][8];
-//        for(Lesson lesson : lessons){
-//            List<Lesson> turnLessons = lessonMap[lesson.getWeekday()][lesson.getTurn()];
-//            if(turnLessons == null) {
-//                lessonMap[lesson.getWeekday()][lesson.getTurn()] = new LinkedList<>();
-//                turnLessons = lessonMap[lesson.getWeekday()][lesson.getTurn()];
-//            }
-//
-//            turnLessons.add(lesson);
-//        }
-
         model.addAttribute("schedule", lessonPositions);
         model.addAttribute("week", week);
         model.addAttribute("className", className);
 
         return "schedule";
+    }
+
+    @RequestMapping("/terms/{termName}/timepoints")
+    public String timepoint(
+            @PathVariable("termName") String termName,
+            @RequestParam("class") List<String> className,
+            @RequestParam("week") List<Integer> weeks,
+            @RequestParam(value = "ignoreType",required = false) List<String> ignoreType,
+            Model model){
+
+        Map<String,Map<String,LessonTimePoint>> mappedPointsList = new HashMap<>();
+
+        for (LessonTimePoint timePoint : lessonSrv
+                .getLessonTimePoint(termName,className,weeks,ignoreType)){
+
+            Map<String,LessonTimePoint> mappedPoints = mappedPointsList
+                    .computeIfAbsent(String.valueOf(timePoint.getWeek()), k -> new HashMap<>());
+
+            String key = timePoint.getDay() + "-" + timePoint.getTurn();
+            mappedPoints.computeIfAbsent(key, k -> timePoint);
+        }
+
+        model.addAttribute("timepoints",mappedPointsList);
+        return "timepoint";
     }
 }
