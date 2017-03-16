@@ -63,7 +63,7 @@ public class ClassScheduleController {
     @RequestMapping("/lessons/timepoint")
     public Model timepoint(
             @RequestParam("termName") String termName,
-            @RequestParam("className") List<String> className,
+            @RequestParam("class") List<String> className,
             @RequestParam("week") List<Integer> weeks,
             @RequestParam(value = "ignoreType",required = false) List<String> ignoreType,
             Model model){

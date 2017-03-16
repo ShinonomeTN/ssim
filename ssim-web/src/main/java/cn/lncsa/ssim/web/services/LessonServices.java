@@ -80,7 +80,7 @@ public class LessonServices {
     }
 
     public List<LessonTimePoint> getLessonTimePoint(String termName, List<String> className, List<Integer> weeks, List<String> ignoreType){
-        List<Object[]> list = ignoreType.size() == 0 ?
+        List<Object[]> list = (ignoreType == null || ignoreType.size() == 0) ?
                 lessonDAO.classTimePointList(termName,className,weeks) : lessonDAO.classTimePointList(termName,className,weeks,ignoreType);
         List<LessonTimePoint> timePoints = new ArrayList<>();
         for (Object[] objects : list){
