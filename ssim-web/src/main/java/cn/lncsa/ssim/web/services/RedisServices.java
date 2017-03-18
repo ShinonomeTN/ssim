@@ -1,16 +1,13 @@
 package cn.lncsa.ssim.web.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisCluster;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -25,11 +22,9 @@ public class RedisServices {
     public final static String KEY_PREFIX_TYPES = "term-type-";
     public final static String KEY_TYPES = "type-list";
 
-    private JedisCluster jedisCluster;
-
-    RedisTemplate<String,String> redisTemplate;
-    ListOperations<String,String> listOperations;
-    ValueOperations<String,String> valueOperations;
+    private RedisTemplate<String, String> redisTemplate;
+    private ListOperations<String, String> listOperations;
+    private ValueOperations<String, String> valueOperations;
 
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, String> redisTemplate) {
@@ -39,7 +34,7 @@ public class RedisServices {
     }
 
     public void setString(String key, String value) {
-        valueOperations.set(key,value);
+        valueOperations.set(key, value);
     }
 
     public String getString(String key) {
@@ -55,11 +50,11 @@ public class RedisServices {
     }
 
     public void putToList(String key, List<String> list) {
-        listOperations.leftPushAll(key,list);
+        listOperations.leftPushAll(key, list);
     }
 
     public List<String> getList(String key) {
-        return listOperations.range(key,0,listOperations.size(key));
+        return listOperations.range(key, 0, listOperations.size(key));
     }
 
     public void clearAll() {

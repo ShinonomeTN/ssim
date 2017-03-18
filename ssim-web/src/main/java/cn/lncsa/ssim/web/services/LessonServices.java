@@ -33,11 +33,13 @@ public class LessonServices {
     }
 
     public List<String> querySchoolTerms() {
-        if (redisSrv.exist(RedisServices.KEY_TERM_LIST)) return redisSrv.getList(RedisServices.KEY_TERM_LIST);
+        String key = RedisServices.KEY_TERM_LIST;
+        String keyHash = RedisServices.KEY_TERM_LIST + String.valueOf(key.hashCode());
+        if (redisSrv.exist(keyHash)) return redisSrv.getList(keyHash);
         else {
-            logger.info("Buffer has no " + RedisServices.KEY_TERM_LIST + " , load from database.");
+            logger.info(String.format("Buffer has no %s(%s) , load from database.", key, keyHash));
             List<String> termList = lessonDAO.getTerms();
-            redisSrv.putToList(RedisServices.KEY_TERM_LIST,termList);
+            redisSrv.putToList(keyHash,termList);
             return termList;
         }
     }
@@ -80,43 +82,48 @@ public class LessonServices {
 
     public Integer queryWeeks(String termName) {
         String key = RedisServices.KEY_PREFIX_WEEKS + termName;
-        if(redisSrv.exist(key)) return redisSrv.getInt(key);
+        String keyHash = RedisServices.KEY_PREFIX_WEEKS + String.valueOf(key.hashCode());
+        if(redisSrv.exist(keyHash)) return redisSrv.getInt(keyHash);
         else {
-            logger.info("Buffer has no " + key + " , load from database.");
+            logger.info(String.format("Buffer has no %s(%s) , load from database.", key, keyHash));
             Integer weeks = lessonDAO.getLatestWeek(termName);
-            redisSrv.setInt(key,weeks);
+            redisSrv.setInt(keyHash,weeks);
             return weeks;
         }
     }
 
     public List<String> listClassesInTerm(String termName) {
         String key = RedisServices.KEY_PREFIX_CLASS + termName;
-        if(redisSrv.exist(key)) return redisSrv.getList(key);
+        String keyHash = RedisServices.KEY_PREFIX_CLASS + String.valueOf(key.hashCode());
+        if(redisSrv.exist(keyHash)) return redisSrv.getList(keyHash);
         else {
-            logger.info("Buffer has no " + key + " , load from database.");
+            logger.info(String.format("Buffer has no %s(%s) , load from database.", key, keyHash));
             List<String> classNames = lessonDAO.getAttendClassesInTerm(termName);
-            redisSrv.putToList(key,classNames);
+            redisSrv.putToList(keyHash,classNames);
             return classNames;
         }
     }
 
     public List<String> listClassTypes() {
-        if(redisSrv.exist(RedisServices.KEY_TYPES)) return redisSrv.getList(RedisServices.KEY_TYPES);
+        String key = RedisServices.KEY_TYPES;
+        String keyHash = RedisServices.KEY_TYPES + String.valueOf(key.hashCode());
+        if(redisSrv.exist(keyHash)) return redisSrv.getList(keyHash);
         else {
-            logger.info("Buffer has no " + RedisServices.KEY_TYPES + " , load from database.");
+            logger.info(String.format("Buffer has no %s(%s) , load from database.", key, keyHash));
             List<String> typeList = lessonDAO.getTypes();
-            redisSrv.putToList(RedisServices.KEY_TYPES,typeList);
+            redisSrv.putToList(keyHash,typeList);
             return typeList;
         }
     }
 
     public List<String> listClassTypes(String termName){
         String key = RedisServices.KEY_PREFIX_TYPES + termName;
-        if(redisSrv.exist(key)) return redisSrv.getList(key);
+        String keyHash = RedisServices.KEY_PREFIX_TYPES + String.valueOf(key.hashCode());
+        if(redisSrv.exist(keyHash)) return redisSrv.getList(keyHash);
         else {
-            logger.info("Buffer has no " + key + " , load from database.");
+            logger.info(String.format("Buffer has no %s(%s) , load from database.", key, keyHash));
             List<String> typeList = lessonDAO.getTermTypes(termName);
-            redisSrv.putToList(key,typeList);
+            redisSrv.putToList(keyHash,typeList);
             return typeList;
         }
     }
