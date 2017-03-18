@@ -1,13 +1,17 @@
 package cn.lncsa.ssim.web.controller;
 
 import cn.lncsa.ssim.web.services.CoursesUpdateServices;
+import cn.lncsa.ssim.web.services.RedisServices;
 import cn.lncsa.ssim.web.services.util.CaptureThread;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * Created by cattenlinger on 2017/3/9.
@@ -17,9 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ManageController {
 
     private CoursesUpdateServices coursesUpdateServices;
+    private RedisServices redisServices;
+
     @Autowired
     public void setCoursesUpdateServices(CoursesUpdateServices coursesUpdateServices) {
         this.coursesUpdateServices = coursesUpdateServices;
+    }
+
+    @Autowired
+    public void setRedisServices(RedisServices redisServices) {
+        this.redisServices = redisServices;
     }
 
     @RequestMapping("/task")
@@ -80,6 +91,13 @@ public class ManageController {
         }
         model.addAttribute("status",coursesUpdateServices.getStatus());
         model.addAttribute("task",coursesUpdateServices.getTaskStatus());
+        return model;
+    }
+
+    @RequestMapping("/cache/clear")
+    public Model clearCache(Model model){
+        redisServices.clearAll();
+        model.addAttribute("result",true);
         return model;
     }
 }

@@ -136,3 +136,5 @@
 - [How to configure log4j.properties for SpringJUnit4ClassRunner?](http://stackoverflow.com/questions/4570072/how-to-configure-log4j-properties-for-springjunit4classrunner)
 - [H2数据库攻略](http://www.cnblogs.com/gao241/p/3480472.html)
 - [阿里开源数据库连接池Druid一览](http://www.kailing.pub/article/index/arcid/91.html)
+- [Spring Data操作Redis时，发现key值出现 \xac\xed\x00\x05t\x00\tb](http://blog.csdn.net/yunhaibin/article/details/9001198)
+
