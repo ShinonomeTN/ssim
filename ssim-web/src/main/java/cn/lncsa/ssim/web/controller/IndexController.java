@@ -63,6 +63,36 @@ public class IndexController {
         return "term";
     }
 
+    @RequestMapping("/terms/{termName}/form")
+    public String termSchedule(
+            @PathVariable("termName") String termName,
+            @RequestParam("type") String formType,
+            Model model){
+
+        model.addAttribute("term", termName);
+        Integer weekCount = lessonSrv.queryWeeks(termName);
+        if (weekCount == null) return "nodata";
+        model.addAttribute("weeks", weekCount);
+
+        switch (formType){
+            case "schedule":
+            case "timepoint":
+                model.addAttribute("classes", lessonSrv.listClassesInTerm(termName));
+                model.addAttribute("categories", lessonSrv.listClassTypes(termName));
+                switch (formType){
+                    case "schedule": return "query-schedule";
+                    case "timepoint": return "query-timepoint";
+                    default: return "redirect:/";
+                }
+            case "teacher":
+                model.addAttribute("teachers",lessonSrv.listTeacher(termName));
+                return "query-teacher";
+            default:
+                return "redirect:/";
+
+        }
+    }
+
     @RequestMapping(value = "/schedule")
     public String querySchedule(
             @RequestParam("termName") String termName,

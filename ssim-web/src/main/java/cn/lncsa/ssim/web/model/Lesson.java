@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Table(name = "lesson",indexes = {
         @Index(name = "index_term",columnList = "term"),
         @Index(name = "index_attend_class", columnList = "attendClass"),
-        @Index(name = "index_category", columnList = "category")
+        @Index(name = "index_category", columnList = "category"),
+        @Index(name = "index_teacher", columnList = "teacher")
 })
 public class Lesson {
     private Long id;

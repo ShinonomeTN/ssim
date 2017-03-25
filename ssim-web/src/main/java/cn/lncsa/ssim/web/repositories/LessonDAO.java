@@ -37,4 +37,7 @@ public interface LessonDAO extends JpaRepository<Lesson,Long>, JpaSpecificationE
     @Query(nativeQuery = true, value = "SELECT DISTINCT week,weekday,turn from lesson " +
             "WHERE term = ?1 AND attendClass in ?2 AND week in ?3")
     List<Object[]> classTimePointList(String termName, List<String> attendClass, List<Integer> week);
+
+    @Query(nativeQuery = true, value = "select distinct teacher from lesson where term = ?1")
+    List<String> teachersInTerm(String termName);
 }

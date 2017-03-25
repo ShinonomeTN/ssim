@@ -1,6 +1,7 @@
 <#--
     Default body template
 -->
+<#assign webroot=""/>
 <#macro body title>
 <html>
 <head>
