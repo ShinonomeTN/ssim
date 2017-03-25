@@ -63,7 +63,37 @@ public class IndexController {
         return "term";
     }
 
-    @RequestMapping(value = "/schedule")
+    @RequestMapping("/terms/{termName}/form.html")
+    public String termSchedule(
+            @PathVariable("termName") String termName,
+            @RequestParam("type") String formType,
+            Model model){
+
+        model.addAttribute("term", termName);
+        Integer weekCount = lessonSrv.queryWeeks(termName);
+        if (weekCount == null) return "nodata";
+        model.addAttribute("weeks", weekCount);
+        model.addAttribute("categories", lessonSrv.listClassTypes(termName));
+
+        switch (formType){
+            case "schedule":
+            case "timepoint":
+                model.addAttribute("classes", lessonSrv.listClassesInTerm(termName));
+                switch (formType){
+                    case "schedule": return "query-schedule";
+                    case "timepoint": return "query-timepoint";
+                    default: return "redirect:/";
+                }
+            case "teacher":
+                model.addAttribute("teachers",lessonSrv.listTeacher(termName));
+                return "query-teacher";
+            default:
+                return "redirect:/";
+
+        }
+    }
+
+    @RequestMapping(value = "/schedule.html")
     public String querySchedule(
             @RequestParam("termName") String termName,
             @RequestParam("week") Integer week,
@@ -72,27 +102,38 @@ public class IndexController {
             Model model) {
 
         model.addAttribute("term", termName);
-
         if (week == null) return "nodata";
         List<Lesson> lessons = lessonSrv.querySchedule(termName, className, week, ignoreTypes);
-        if (lessons == null || lessons.size() == 0) return "nodata";
 
-        Map<String,List<Lesson>> lessonPositions = new HashMap<>();
-        for (Lesson lesson : lessons){
-            String pos = lesson.getWeekday().toString() + "-" + lesson.getTurn().toString();
-            List<Lesson> posLesson = lessonPositions.computeIfAbsent(pos, k -> new ArrayList<>());
-            posLesson.add(lesson);
-        }
-
-        model.addAttribute("schedule", lessonPositions);
+        model.addAttribute("schedule", mapLessonPositions(lessons));
         model.addAttribute("week", week);
         model.addAttribute("className", className);
         model.addAttribute("ignored",ignoreTypes);
 
-        return "schedule";
+        return "schedule-class";
     }
 
-    @RequestMapping("/terms/{termName}/timepoints")
+    @RequestMapping("/schedule/teachers.html")
+    public String teacherSchedule(
+            @RequestParam("term") String termName,
+            @RequestParam("teacher") String teacherName,
+            @RequestParam("week") Integer week,
+            @RequestParam(value = "ignoreType",required = false) List<String> ignoreType,
+            Model model){
+
+        model.addAttribute("term",termName);
+        if(week == null) return "nodata";
+        List<Lesson> lessons = lessonSrv.queryTeacherSchedule(termName,week,teacherName,ignoreType);
+
+        model.addAttribute("schedule",mapLessonPositions(lessons));
+        model.addAttribute("week",week);
+        model.addAttribute("teacher",teacherName);
+        model.addAttribute("ignored",ignoreType);
+
+        return "schedule-teacher";
+    }
+
+    @RequestMapping("/terms/{termName}/timepoints.html")
     public String timePoint(
             @PathVariable("termName") String termName,
             @RequestParam("class") List<String> className,
@@ -118,5 +159,20 @@ public class IndexController {
         model.addAttribute("ignored",ignoreType);
         model.addAttribute("term",termName);
         return "timepoint";
+    }
+
+    /*
+    *
+    * Private procedure
+    *
+    * */
+    private Map<String,List<Lesson>> mapLessonPositions(List<Lesson> lessons){
+        Map<String,List<Lesson>> lessonPositions = new HashMap<>();
+        for (Lesson lesson : lessons){
+            String pos = lesson.getWeekday().toString() + "-" + lesson.getTurn().toString();
+            List<Lesson> posLesson = lessonPositions.computeIfAbsent(pos, k -> new ArrayList<>());
+            posLesson.add(lesson);
+        }
+        return lessonPositions;
     }
 }

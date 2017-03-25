@@ -8,9 +8,9 @@
             </div>
             <div class="col-sm-8 col-sm-offset-2">
                 <#if term??>
-                    <a href="/cs/terms/${term}" class="btn btn-primary btn-block">返回 ${term}</a>
+                    <a href="${webRoot}/terms/${term}" class="btn btn-primary btn-block">返回 ${term}</a>
                 </#if>
-                <a href="/cs" class="btn btn-block btn-default">主页</a>
+                <a href="${webRoot}" class="btn btn-block btn-default">主页</a>
             </div>
         </div>
     </div>
