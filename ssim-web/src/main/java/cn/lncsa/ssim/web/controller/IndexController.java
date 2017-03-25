@@ -123,9 +123,13 @@ public class IndexController {
 
         model.addAttribute("term",termName);
         if(week == null) return "nodata";
-        List<Lesson> lessons = lessonSrv.queryTeacherSchedule(termName,week,teacherName,ignoreType);
+        Map<String,Lesson> trimLessonMap = new HashMap<>();
+        for (Lesson lesson : lessonSrv.queryTeacherSchedule(termName,week,teacherName,ignoreType)){
+            String uniqueKey = String.format("%s-%d-%d", lesson.getName(), lesson.getWeekday(), lesson.getTurn());
+            trimLessonMap.put(uniqueKey, lesson);
+        }
 
-        model.addAttribute("schedule",mapLessonPositions(lessons));
+        model.addAttribute("schedule",mapLessonPositions(trimLessonMap.values()));
         model.addAttribute("week",week);
         model.addAttribute("teacher",teacherName);
         model.addAttribute("ignored",ignoreType);
@@ -166,7 +170,7 @@ public class IndexController {
     * Private procedure
     *
     * */
-    private Map<String,List<Lesson>> mapLessonPositions(List<Lesson> lessons){
+    private Map<String,List<Lesson>> mapLessonPositions(Iterable<Lesson> lessons){
         Map<String,List<Lesson>> lessonPositions = new HashMap<>();
         for (Lesson lesson : lessons){
             String pos = lesson.getWeekday().toString() + "-" + lesson.getTurn().toString();
