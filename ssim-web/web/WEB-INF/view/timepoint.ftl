@@ -1,7 +1,6 @@
 <#import "temp/main.ftl" as temp>
 <@temp.body title="无课时间查询">
 <div class="col-md-12">
-    <#assign weekdaysZh =["日","一","二","三","四","五","六"] />
     <div class="panel panel-default">
         <div class="panel-heading">
             <div>
@@ -34,7 +33,7 @@
                 </#if>
                 <div class="pull-right">
                     <span>* <span class="glyphicon glyphicon-alert"></span> 图标代表有课</span>
-                    <a class="btn btn-primary btn-sm" href="/cs/terms/${term}">返回</a>
+                    <a class="btn btn-primary btn-sm" href="${webRoot}/terms/${term}">返回</a>
                 </div>
                 <div class="clearfix"></div>
             </div>
