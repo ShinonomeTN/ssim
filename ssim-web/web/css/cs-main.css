@@ -1,37 +1,36 @@
-.table-schedule>tr>td{
+body{
+    margin-bottom: 100px;
+}
+
+.table-schedule > tr > td {
     text-align: center;
 }
 
-.table-schedule .item>small{
+.table-schedule .item > small {
     display: inline-block;
 }
 
-.table-schedule .item>label{
+.table-schedule .item > label {
     display: inline-block;
 }
 
-.table-schedule .item, .list-schedule .item{
+.table-schedule .item, .list-schedule .item {
     border-bottom: gray dotted 1px;
 }
 
-.table-schedule .item_latest, .list-schedule .item_latest{
+.table-schedule .item_latest, .list-schedule .item_latest {
     border: none;
 }
 
-.list-schedule .item>*{
-    margin : 2px;
+.list-schedule .item > * {
+    margin: 2px;
 }
 
-.list-timePoint .glyphicon-alert{
+.list-timePoint .glyphicon-alert {
     color: #999;
 }
 
-iframe{
-    width: 100%;
-    border: none;
-}
-
-.loading-container{
+.loading-container {
     width: 100%;
     height: 80px;
     padding: 20px 20px;
@@ -42,13 +41,24 @@ iframe{
     z-index: 1;
 }
 
+.lnc-cs-footer {
+    display: inline-block;
+    padding-left: 32pt;
+    background: url('/apple-touch-icon.png') left no-repeat;
+    background-size: contain;
+    text-align: left;
+
+    padding-right: 5px;
+    border-right: solid #efefef 2px;
+}
+
 .summary-thumbnail:after {
     content: " ";
     height: 60px;
     width: 60px;
-    -webkit-animation:spin 1s linear infinite;
-    -moz-animation:spin 1s linear infinite;
-    animation:spin 1s linear infinite;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
     display: block;
     /*position: absolute;*/
     margin-left: auto;
@@ -60,6 +70,21 @@ iframe{
     border-radius: 50%;
 }
 
-@-moz-keyframes spin {100%{-moz-transform: rotate(360deg);}}
-@-webkit-keyframes spin{100%{-webkit-transform: rotate(360deg);}}
-@keyframes spin {100%{-webkit-transform: rotate(360deg); transform:rotate(360deg);}}
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

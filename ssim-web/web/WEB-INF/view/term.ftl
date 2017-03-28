@@ -44,7 +44,7 @@
 
                             break;
                         case "error":
-                            $(qFormNode).html("<div class='loading-container' align='center'><span class='glyphicon glyphicon-remove-circle'> </span> 网络错误</div>")
+                            $(qFormNode).html("<h1 class='loading-container' align='center'><span class='glyphicon glyphicon-remove-circle'></span> 网络错误</h1>")
                             break;
                         default:
                             console.log(xhr.status);
