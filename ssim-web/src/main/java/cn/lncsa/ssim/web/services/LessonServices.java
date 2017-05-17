@@ -160,7 +160,7 @@ public class LessonServices {
         });
     }
 
-    public static int getTwoDatesDifOfWeek(Date big, Date small) {
+    public int getTwoDatesDifOfWeek(Date big, Date small) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(big);
         Calendar cal2 = Calendar.getInstance();

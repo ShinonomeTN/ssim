@@ -22,6 +22,7 @@ public class RedisServices {
     public final static String KEY_PREFIX_TYPES = "term-type-";
     public final static String KEY_TYPES = "type-list";
     public final static String KEY_PREFIX_TEACHER = "term-teacher-";
+    public final static String KEY_PREFIX_TERM_CALENDER = "term-calender-";
 
     private RedisTemplate<String, String> redisTemplate;
     private ListOperations<String, String> listOperations;

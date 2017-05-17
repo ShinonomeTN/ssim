@@ -154,7 +154,7 @@ public class IndexController {
                     .computeIfAbsent(String.valueOf(timePoint.getWeek()), k -> new HashMap<>());
 
             String key = timePoint.getDay() + "-" + timePoint.getTurn();
-            mappedPoints.computeIfAbsent(key, k -> timePoint);
+            mappedPoints.putIfAbsent(key, timePoint);
         }
 
         model.addAttribute("timePoints",mappedPointsList);
