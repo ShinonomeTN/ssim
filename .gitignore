@@ -8,13 +8,13 @@
 # Complie target
 #
 
-/**/target/
+**/target/
 out/
 
 #
 # Capture buffer directory
 #
-web/WEB-INF/captureBuffer/
+ssim-web/web/WEB-INF/captureBuffer/
 
 #
 # H2 database directory

@@ -34,4 +34,16 @@ public class LessonExpanderImplTest {
         }
     }
 
+    @Test
+    public void expand2() throws Exception{
+        InputStream inputStream = this.getClass().getResourceAsStream("/021460.html");
+        KingoToTimePointCourseFactory reader = new KingoToTimePointCourseFactory();
+        reader.setCharset("UTF8");
+        KingoRawCourse rawTable = reader.parse(inputStream, Integer.parseInt("021460"));
+        LessonExpander<KingoRawCourse,Lesson> expander = new LessonExpanderImpl();
+        List<Lesson> lessons = expander.expand(rawTable);
+        for (Lesson lesson : lessons) {
+            System.out.println(lesson);
+        }
+    }
 }
