@@ -21,8 +21,17 @@
     </div>
     <div align="center">
         <hr>
-        <small>本站开放源代码 : <a href="https://github.com/shinonometn/SimpleSubjectImporter/tree/master">Github</a></small><br>
-        <small>使用请遵循 GPLv2 协议</small>
+        <div>
+            <div class="lnc-cs-footer">
+                <small style="color: #A2A2A2;">powered by</small><br>
+                <span>岭南软件园协会</span>
+            </div>
+            <div style="display: inline-block">
+                <small>本站开放源代码 : <a href="https://github.com/shinonometn/SimpleSubjectImporter/tree/master">Github</a></small><br>
+                <small>使用请遵循 GPLv2 协议</small>
+            </div>
+        </div>
+        <div style="display:inline-block; margin-top: 10px"><small><a href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">粤ICP备15093634号-1</a></small></div>
     </div>
 </div>
 <@_import_js></@_import_js>
