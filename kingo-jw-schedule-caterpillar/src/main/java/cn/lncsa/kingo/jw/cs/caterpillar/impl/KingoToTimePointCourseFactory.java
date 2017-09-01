@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.security.auth.Subject;
 import java.io.*;
 import java.util.*;
 
@@ -75,6 +76,8 @@ public class KingoToTimePointCourseFactory implements CourseFactory<KingoRawCour
 
         KingoRawCourse subject = new KingoRawCourse();
         subject.setId(id);
+
+        if(tables.size() <= 0) return null;
 
         subject = processSubjectTerm(subject,tables.get(0));
         subject = processSubjectTitle(subject,tables.get(1));

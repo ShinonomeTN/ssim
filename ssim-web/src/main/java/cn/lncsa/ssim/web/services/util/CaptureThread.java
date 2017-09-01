@@ -23,6 +23,7 @@ public class CaptureThread implements Runnable {
 
     public final static String STATUS_ERROR = "error";
     public final static String STATUS_READY = "ready";
+    public final static String STATUS_FINISHED = "finished";
     public final static String STATUS_CAPTURING = "capturing";
     public final static String STATUS_IMPORTING = "importing";
     public final static String STATUS_STOPPED = "stopped";
@@ -57,21 +58,22 @@ public class CaptureThread implements Runnable {
             if ((taskCode != null && !taskCode.equals("")) || skipCapture) {
                 if (!skipCapture) if (!capture(outDir)) status = STATUS_ERROR;
                 if (!load(outDir)) status = STATUS_ERROR;
-                else status = STATUS_READY;
+                else status = STATUS_FINISHED;
 
             } else {
 
                 logger.error("Task not available.");
                 status = STATUS_ERROR;
             }
-        } catch (IOException e) {
-
-            logger.error("An error occur, task interrupted.", e);
-            status = STATUS_ERROR;
         } catch (InterruptedException e) {
 
             logger.error("Task interrupted.", e);
             status = STATUS_STOPPED;
+
+        } catch (Exception e) {
+
+            logger.error("An error occur, task interrupted.", e);
+            status = STATUS_ERROR;
         }
     }
 
@@ -135,9 +137,8 @@ public class CaptureThread implements Runnable {
             logger.info("Start importing task.");
             int count = 0;
             for (File f : files) {
-                dao.save(
-                        expander.expand(
-                                factory.parse(f)));
+                KingoRawCourse kingoRawCourse = factory.parse(f);
+                if(kingoRawCourse != null) dao.save(expander.expand(kingoRawCourse));
                 count++;
                 receiver.tick(count, files.length, f.getName());
             }

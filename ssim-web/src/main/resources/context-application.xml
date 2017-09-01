@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- Services -->
-    <bean:properties id="userProperties" location="WEB-INF/users.properties"/>
+    <bean:properties id="userProperties" location="WEB-INF/user.properties"/>
     <util:component-scan base-package="cn.lncsa.ssim.web.services"/>
 
     <!-- Infrastructure -->

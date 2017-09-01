@@ -13,6 +13,7 @@ public class CoursesUpdateServices {
 
     private CaptureThread captureThread;
     private Thread captureThreadHolder;
+    private RedisServices redisServices;
 
     private TickModel tickModel;
 
@@ -46,5 +47,17 @@ public class CoursesUpdateServices {
 
     public void terminateCaptureThread() {
         captureThreadHolder.interrupt();
+    }
+
+    public void clearCache() {
+        if(captureThread.getStatus().equals(CaptureThread.STATUS_FINISHED)) {
+            redisServices.clearAll();
+            captureThread.setStatus(CaptureThread.STATUS_READY);
+        }
+    }
+
+    @Autowired
+    public void setRedisServices(RedisServices redisServices) {
+        this.redisServices = redisServices;
     }
 }

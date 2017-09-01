@@ -44,6 +44,9 @@ public class IndexController {
                 model.addAttribute("busy", coursesUpdateServices.getStatus());
                 break;
 
+            case CaptureThread.STATUS_FINISHED:
+                coursesUpdateServices.clearCache();
+
             default:
                 break;
         }

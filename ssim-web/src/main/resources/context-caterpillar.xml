@@ -5,12 +5,12 @@
 
     <bean class="cn.lncsa.ssim.web.services.util.TickModel" name="tickReceiver"/>
 
+    <bean:properties id="caterpillarProperty" location="WEB-INF/login.properties"/>
+
     <bean class="cn.lncsa.ssim.web.services.util.CaptureThread">
         <property name="caterpillar">
             <bean class="cn.lncsa.kingo.jw.cs.caterpillar.impl.KingoJWCaterpillar">
-                <property name="loginProperties">
-                    <bean:properties location="WEB-INF/login.properties"/>
-                </property>
+                <property name="loginProperties" ref="caterpillarProperty"/>
                 <property name="tickReceiver" ref="tickReceiver"/>
             </bean>
         </property>
@@ -25,7 +25,7 @@
 
         <property name="receiver" ref="tickReceiver"/>
 
-        <property name="bufferPath" value="WEB-INF/captureBuffer"/>
+        <property name="bufferPath" value="/temp/ssim/captureBuffer/"/>
     </bean>
 
 </beans>

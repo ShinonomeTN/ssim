@@ -42,7 +42,7 @@ public class LessonServices {
         else {
             logger.info(String.format("Buffer has no %s , load from database.", key));
             List<String> termList = lessonDAO.getTerms();
-            redisSrv.putToList(key,termList);
+            if(termList != null && termList.size() > 0) redisSrv.putToList(key,termList);
             return termList;
         }
     }

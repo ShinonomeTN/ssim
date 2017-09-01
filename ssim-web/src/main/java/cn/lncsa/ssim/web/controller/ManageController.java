@@ -47,6 +47,7 @@ public class ManageController {
             case CaptureThread.STATUS_ERROR:
             case CaptureThread.STATUS_READY:
             case CaptureThread.STATUS_STOPPED:
+            case CaptureThread.STATUS_FINISHED:
                 coursesUpdateServices.setTaskCode(taskCode);
                 coursesUpdateServices.fireCaptureThread(false);
                 break;
@@ -65,6 +66,7 @@ public class ManageController {
         switch (coursesUpdateServices.getStatus()){
             case CaptureThread.STATUS_ERROR:
             case CaptureThread.STATUS_READY:
+            case CaptureThread.STATUS_FINISHED:
             case CaptureThread.STATUS_STOPPED:
                 coursesUpdateServices.fireCaptureThread(true);
                 break;
@@ -96,7 +98,7 @@ public class ManageController {
 
     @RequestMapping("/cache/clear")
     public Model clearCache(Model model){
-        redisServices.clearAll();
+        coursesUpdateServices.clearCache();
         model.addAttribute("result",true);
         return model;
     }
