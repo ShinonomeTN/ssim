@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>3.0</version>
     <modules>
-        <module>ssim-class-schedule</module>
         <module>ssim-common</module>
+        <module>ssim-class-schedule</module>
         <module>kingo-jw-schedule-caterpillar</module>
         <module>ssim-web</module>
     </modules>
