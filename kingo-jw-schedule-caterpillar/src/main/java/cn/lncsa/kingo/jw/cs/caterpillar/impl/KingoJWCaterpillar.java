@@ -3,7 +3,7 @@ package cn.lncsa.kingo.jw.cs.caterpillar.impl;
 import cn.lncsa.ssim.common.events.TickEventReceiver;
 import cn.lncsa.ssim.common.http.HttpSessionHolder;
 import cn.lncsa.ssim.common.http.impl.HttpSessionHolderImpl;
-import cn.lncsa.ssim.schedule.CourseScheduleCaterpillar;
+import cn.lncsa.ssim.schedule.caterpillar.CourseScheduleCaterpillar;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -150,7 +149,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
      * @throws IOException
      */
     @Override
-    public Map<String, String> getTermsFromRemote() throws IOException {
+    public Map<String, String> dumpTermList() throws IOException {
 
         String queryPage = stringProperties.getProperty("classInfoQueryPage");
 
@@ -175,7 +174,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
      * @throws IOException
      */
     @Override
-    public Map<String, String> getCoursesFromRemote(String termCode) throws IOException {
+    public Map<String, String> dumpCourseList(String termCode) throws IOException {
 
         String queryPage = stringProperties.getProperty("subjectListQueryPage") + termCode;
         String referPage = stringProperties.getProperty("classInfoQueryPage");
@@ -219,7 +218,7 @@ public class KingoJWCaterpillar implements CourseScheduleCaterpillar {
         logger.info("checking login status finished");
 
         logger.info("Capturing subject list...");
-        Map<String, String> lessonListOfTheTerm = getCoursesFromRemote(termCode);
+        Map<String, String> lessonListOfTheTerm = dumpCourseList(termCode);
 
         logger.info("total item count - " + lessonListOfTheTerm.keySet().size());
         int total = lessonListOfTheTerm.size();

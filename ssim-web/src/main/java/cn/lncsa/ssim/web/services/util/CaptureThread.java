@@ -2,7 +2,7 @@ package cn.lncsa.ssim.web.services.util;
 
 import cn.lncsa.kingo.jw.cs.caterpillar.model.KingoRawCourse;
 import cn.lncsa.ssim.common.events.TickEventReceiver;
-import cn.lncsa.ssim.schedule.CourseScheduleCaterpillar;
+import cn.lncsa.ssim.schedule.caterpillar.CourseScheduleCaterpillar;
 import cn.lncsa.ssim.schedule.factory.CourseFactory;
 import cn.lncsa.ssim.schedule.factory.LessonExpander;
 import cn.lncsa.ssim.web.model.Lesson;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 
 /**
  * Created by catten on 3/4/17.

@@ -1,4 +1,4 @@
-package cn.lncsa.ssim.schedule;
+package cn.lncsa.ssim.schedule.caterpillar;
 
 import cn.lncsa.ssim.common.events.TickEventProvider;
 
@@ -11,9 +11,25 @@ import java.util.Properties;
  * Created by catten on 2/24/17.
  */
 public interface CourseScheduleCaterpillar extends TickEventProvider {
-    Map<String, String> getTermsFromRemote() throws IOException;
 
-    Map<String, String> getCoursesFromRemote(String termCode) throws IOException;
+    /**
+     *
+     * Get all terms from remote server
+     *
+     * @return term code as key, term name as value
+     * @throws IOException
+     */
+    Map<String, String> dumpTermList() throws IOException;
+
+    /**
+     *
+     * Get all courses that in the term
+     *
+     * @param termCode the code represented a term
+     * @return course code as key, course name as value
+     * @throws IOException
+     */
+    Map<String, String> dumpCourseList(String termCode) throws IOException;
 
     int getTermSubjectToFiles(String termCode, File outputFolder) throws IOException, InterruptedException;
 
