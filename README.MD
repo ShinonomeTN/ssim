@@ -1,16 +1,16 @@
-#简单的课表查询网站
+# 简单的课表查询网站
 
 为针对广东岭南职业技术学院所使用的教务系统（青果网教务系统）的课表爬取与整理网站
 
 [TOC]
 
-##公共API
+## 公共API
 
 通过此类 API 与服务器通讯均使用 UTF-8 编码格式
 
-###课表查询 API
+### 课表查询 API
 
-####/api/terms - 所有学期
+#### /api/terms - 所有学期
 
 查询所有可用学期
 
@@ -24,7 +24,7 @@
 }
 ```
 
-####/api/weeks - 某学期最大周数
+#### /api/weeks - 某学期最大周数
 
 查询学期最大周数
 
@@ -39,7 +39,7 @@
 }
 ```
 
-####/api/classes - 某学期上课班级
+#### /api/classes - 某学期上课班级
 
 查询学期内上课的班级
 
@@ -54,7 +54,7 @@
 }
 ```
 
-####/api/types - 查询课程类型
+#### /api/types - 查询课程类型
 
 查询所有课程类型
 
@@ -75,7 +75,7 @@
 }
 ```
 
-####/api/lessons - 查询课表
+#### /api/lessons - 查询课表
 
 - 方法 ： GET
 - 参数 ：
@@ -106,7 +106,7 @@
 }
 ```
 
-####/api/lessons/timepoint - 查询有课时间
+#### /api/lessons/timepoint - 查询有课时间
 
 - 方法 ： GET
 - 参数 ： 
@@ -126,12 +126,12 @@
 
 ```
 
-##其他 API
+## 其他 API
 
 管理 API 可以查阅 Controller 代码得知。这里不直接说明。
 
 ***
-##参考
+## 参考
 
 - [Hibernate EHCache – Hibernate Second Level Cache](http://www.journaldev.com/2980/hibernate-ehcache-hibernate-second-level-cache)
 - [解决spring3 mvc中乱码的问题。](http://blog.csdn.net/zhengzhb/article/details/6967975)
